@@ -1,4 +1,4 @@
-# Session ID - Session Title
+# DAT260 - Multimodel Data Processing: SAP HANA Cloud and SAP HANA
 
 ## Description
 
