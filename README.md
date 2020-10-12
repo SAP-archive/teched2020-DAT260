@@ -14,54 +14,35 @@ The requirements to follow the exercises in this repository are...
 
 ## Exercises
 
-Provide the exercise content here directly in README.md using [markdown](https://guides.github.com/features/mastering-markdown/) and linking to the specific exercise pages, below is an example.
-
 - [Getting Started](exercises/ex0/)
-- [Exercise 1 - First Exercise Description](exercises/ex1/)
-    - [Exercise 1.1 - Exercise 1 Sub Exercise 1 Description](exercises/ex1#exercise-11-sub-exercise-1-description)
-    - [Exercise 1.2 - Exercise 1 Sub Exercise 2 Description](exercises/ex1#exercise-12-sub-exercise-2-description)
-- [Exercise 2 - Second Exercise Description](exercises/ex2/)
-    - [Exercise 2.1 - Exercise 2 Sub Exercise 1 Description](exercises/ex2#exercise-21-sub-exercise-1-description)
-    - [Exercise 2.2 - Exercise 2 Sub Exercise 2 Description](exercises/ex2#exercise-22-sub-exercise-2-description)
-
-Planned structure of Exercises:
-* Explore data
-* Add planar geometries (starting from 4326 geometries)
-    * create planar srs
-    * add columns
-    * update columns with st_tranform
-* Calculate the direct distance between 'your location' and the destination POI
-    * select your location with sql stmt
-    * select target poi
-    * use st_distance
-* Identify relevant area for route finding/transportation network
-    * create circle for relevant area (+ buffer 250m, maybe)
-    * set flag "in_scope = true" for all node in circle
-* Check in how far the area is suitable for bike rides
-    * identify cycleways
-    * st_unionaggr + visualization
-    * simple voronoi with bicycle repair stations
-* Snapping: Connect pois and nodes/edges (via Voronoi)
-    * persists voronoi cells for each node
-    * add column to poi table which refers to associated node
-* pre-process data for use with graph engine
-    * simplify network?
-* calculate shortest path from start to target
-* calculate low-cost path from start to target
-    * pub index? cycle way usage? bicycle repair stations?
-* something about centrality, subnetworks?
-
-**OR** Link to the PDF document stored in your github repo for example...
-
-Start the exercises [here](exercises/myPDFDoc.pdf).
-    
-**OR** Link to the Tutorial Navigator for example...
-
-Start the exercises [here](https://developers.sap.com/tutorials/abap-environment-trial-onboarding.html).
-
-**IMPORTANT**
-
-Your repo must contain the .reuse and LICENSES folder and the License section below. DO NOT REMOVE the section or folders/files. Also, remove all unused template assets(images, folders, etc) from the exercises folder. 
+    - [Technical Setup](exercises/ex0#subex1)
+    - [Demo Scenario](exercises/ex0#subex2)
+    - [Technical Background](exercises/ex0#subex3)
+    - [Explore Data](exercises/ex0#subex4)
+- [Exercise 1 - Add Planar Geometries Based on Lat/Lon](exercises/ex1/)
+    - [Exercise 1.1 - Create Planar Spatial Reference System](exercises/ex1#subex1)
+    - [Exercise 1.2 - Add Column with Type ST_Geometry](exercises/ex1#subex2)
+    - [Exercise 1.3 - Persist Projected Geometries](exercises/ex1#subex3)
+- [Exercise 2 - Determine Distance to Target Point of Interest (POI)](exercises/ex2/)
+    - [Exercise 2.1 - Select a Location via SQL](exercises/ex2#subex1)
+    - [Exercise 2.2 - Select Target POI](exercises/ex2#subex2)
+    - [Exercise 2.3 - Determine Distance using ST_Distance](exercises/ex2#subex3)
+- [Exercise 3 - Identify Relevant Area for Transportation Network](exercises/ex3/)
+    - [Exercise 3.1 - Create Circle for Relevant Area](exercises/ex3#subex1)
+    - [Exercise 3.2 - Add Flag for all Nodes in Circle](exercises/ex3#subex2)
+- [Exercise 4 - Check out the Suitability of this Area for Bike Rides](exercises/ex4/)
+    - [Exercise 4.1 - Identify Cycleways](exercises/ex4#subex1)
+    - [Exercise 4.2 - Create one Geometry or SVG to Visualize Cycleways](exercises/ex4#subex2)
+    - [Exercise 4.3 - Use Voronoi to Understand the Coverage of Bike Repair Stations](exercises/ex4#subex3)
+- [Exercise 5 - Snap POIs to Nodes of Street Network](exercises/ex5/)
+    - [Exercise 5.1 - Persist Voronoi Cells for all Nodes](exercises/ex5#subex1)
+    - [Exercise 5.2 - Enhance POI Table with Node Reference](exercises/ex5#subex2)
+- [Exercise 6 - Pre-process Data for Usage with Graph Engine](exercises/ex6/)
+    - [Exercise 6.1 - Simplify Network](exercises/ex6#subex1)
+- [Exercise 7 - Calculate Shortest Path from Start to Target](exercises/ex7/)
+- [Exercise 8 - Calculate Low-Cost Path from Start to Target](exercises/ex8/)
+    - [Exercise 8.1 - Setup Cost Function (Pubs, Cycle Ways & Bicycle Repair)](exercises/ex8#subex1)
+- [Exercise 9 - Centrality & Subnetworks](exercises/ex9/)
 
 ## How to obtain support
 
