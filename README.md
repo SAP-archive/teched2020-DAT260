@@ -19,7 +19,7 @@ The requirements to follow the exercises in this repository are...
     - [Demo Scenario](exercises/ex0#subex2)
     - [Technical Background](exercises/ex0#subex3)
     - [Explore Data](exercises/ex0#subex4)
-- [Exercise 1 - Add Planar Geometries Based on Lat/Lon](exercises/ex1/)
+- [Exercise 1 - Add Planar Geometries Based on WGS84 Geometries](exercises/ex1/)
     - [Exercise 1.1 - Create Planar Spatial Reference System](exercises/ex1#subex1)
     - [Exercise 1.2 - Add Column with Type ST_Geometry](exercises/ex1#subex2)
     - [Exercise 1.3 - Persist Projected Geometries](exercises/ex1#subex3)
