@@ -28,6 +28,25 @@ SELECT ST_GeomFromText('POINT(-0.026859 51.505748)', 4326) FROM DUMMY;
 If you use an SQL editor with built-in spatial visualization, like [DBeaver](https://dbeaver.io/), you will be able to preview the location and double-check that it matches your previously selected location.
 ![](images/dbeaver_preview_location.png)
 
+To make the following exercises more convenient, it is a good idea to transform this point to the same spatial reference system as our OSM data (srs with id 32630). We can extract the Well-known Text representation by using function [`ST_AsWKT`](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/7a169dff787c1014a095b86992806f14.html).
+
+```sql
+SELECT ST_GeomFromText('POINT(-0.026859 51.505748)', 4326)
+    .ST_Transform(32630)
+    .ST_AsWKT()
+FROM DUMMY;
+```
+
+Result:
+```
+POINT (706327.107445 5710259.94449)
+```
+
+We can now select the point with spatial reference system 32630 by calling the following statement.
+
+```sql
+SELECT ST_GeomFromText('POINT (706327.107445 5710259.94449)', 32630) FROM DUMMY;
+```
 
 ## Exercise 2.2 - Select Target POI <a name="subex2"></a>
 ---
@@ -68,11 +87,11 @@ SELECT * FROM LONDON_POI lp WHERE "osmid" = 6274057185
 
 ---
 
-We already know how to select our location, which is the start of our journey, and how to select the target POI. We need to use function [ST_Distance](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/7a182aa3787c101481f996e3d419c720.html) to determine the direct distance between both points. However, before we can use a spatial function or spatial predicate incorporating more than one geometry, we need to make sure that all geometries are using the same spatial reference system.
+We already know how to select our location, which is the start of our journey, and how to select the target POI. We need to use function [ST_Distance](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/7a182aa3787c101481f996e3d419c720.html) to determine the direct distance between both points.
 
 ```sql
 SELECT SHAPE.ST_Distance(
-        ST_GeomFromText('POINT(-0.026859 51.505748)', 4326).ST_Transform(32630)
+        ST_GeomFromText('POINT (706327.107445 5710259.94449)', 32630)
     ) 
 FROM LONDON_POI lp 
 WHERE "osmid" = 6274057185
