@@ -92,7 +92,7 @@ USING
     	.ST_Buffer(5000) AS AREA
 	FROM LONDON_POI
 	WHERE "osmid" = 6274057185
-    -- previous statement end --
+    	-- previous statement end --
 ) circle ON 1=1
 WHEN MATCHED THEN UPDATE SET lv.IN_SCOPE = CIRCLE.AREA.ST_Intersects(SHAPE);
 
