@@ -2,7 +2,7 @@
 
 In the previous exercise we have use hop distance to calculate a shortest path. Now we will use a more meaningful cost function - we will take the time it takes to traverse a street segment. The EDGES table contains a "length" and "maxspeed" column. "maxspeed" is a string column with values like '30 mph'. We will create a new numeric column "SPEED_MPH" and extract the number part of "maxspeed" into this column. We will then re-write our procedure to take the expression "length"/"SPEED_MPH" as cost function.
 
-## Exercise 8.1 Generate a numeric column that contains the maximum speed allowed information.
+## Exercise 8.1 Generate a numeric column that contains the maximum speed allowed information <a name="subex1"></a>
 
 ---
 **Add an integer column to the LONDON_BIKE_EDGES table. Extract the number part of "maxspeed".**
@@ -18,7 +18,7 @@ SELECT "SPEED_MPH", COUNT(*) AS C FROM "DAT260"."LONDON_BIKE_EDGES" GROUP BY "SP
 -- let's add a default value on the segments that do not have a speed information
 UPDATE "DAT260"."LONDON_BIKE_EDGES" SET "SPEED_MPH" = 30 WHERE "SPEED_MPH" IS NULL;
 ```
-## Exercise 8.2 Calculate Shortest Paths, minimizing the time it takes to get from start to end
+## Exercise 8.2 Calculate Shortest Paths, minimizing the time it takes to get from start to end <a name="subex2"></a>
 
 Just like in the previous example, we define a table type and a procedure. This time, we are using "length"/SPEED_MPH" as cost function. Syntactically, the cost function is a lambda function like this:
 ```sql
@@ -63,7 +63,7 @@ CALL "DAT260"."GS_SPOO_WEIGTHED"(14680080, 7251951621, 'ANY', ?, ?, ?);
 
 TODO: add image
 
-## Exercise 8.3 Finding Pubs and Bikelanes
+## Exercise 8.3 Finding Pubs and Bikelanes <a name="subex3"></a>
 
 Finding the fastest route is easy. Let's find two more interesting paths. First, we want find paths suitable for bikes. We can do so, by boosting street segments which are cycleways. Note that in most cases you can take cycleways only. The path algorithm will choose cycleways unless they are 10x longer than a normal road. For this logic we will use an IF statement within the cost function.
 Second, we would like to find "attractive" paths. We will calculate a new measure for the edges: "PUBINESS" - which is derived from the number of pubs nearby.
@@ -128,7 +128,7 @@ END;
 
 CALL "DAT260"."GS_SPOO_MULTI_MODE"(14680080, 7251951621, 'ANY', 'pub', ?, ?, ?);
 ```
-## Exercise 8.4 Wrapping a Procedure in a Table Function
+## Exercise 8.4 Wrapping a Procedure in a Table Function <a name="subex4"></a> 
 
 The procedure above returns more than one output - the path's length, weight, and a table with the edges. Sometimes it is convenient to wrap a GRAPH procedure in a table function, returning only a table output. Table functions are called via SELECT and this is a convenient way to post-process graph result - simply use the full power of SQL on your result set.
 
@@ -136,7 +136,7 @@ The procedure above returns more than one output - the path's length, weight, an
 CREATE TYPE "DAT260"."TT_EDGES_SPOO_F" AS TABLE (
 		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SHAPE" ST_GEOMETRY
 );
-CREATE OR REPLACE FUNCTION "TECHED2020"."F_SPOO_EDGES"(
+CREATE OR REPLACE FUNCTION "DAT260"."F_SPOO_EDGES"(
 	IN i_startVertex BIGINT, 		-- the ID of the start vertex
 	IN i_endVertex BIGINT, 			-- the ID of the end vertex
 	IN i_direction NVARCHAR(10),
@@ -168,4 +168,4 @@ TODO: pic
 
 We have used two more cost functions for path finding. We have wrapped the database procedure into a table function which can be called in a SQL SELECT statement. This is a nice way of mixing graph and relational processing.
 
-Continue to - [Exercise 9 - Excercise 9 ](../ex9/README.md)
+Continue to - [Exercise 9 - Calculate Isochrones and Closeness Centrality](../ex9/README.md)

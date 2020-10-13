@@ -4,7 +4,7 @@ Our graph dataset describes the London street network. Formally, a graph consist
 The HANA Graph engine requires a key on both tables, and the source and target columns of the edges table must not contain NULLs. To ensure the graph's consistency, it is also good practice to have a foreign key relationship defined on source and target column.
 Once your data is prepared, you expose it to the HANA Graph engine via a GRAPH WORKSPACE.
 
-## Exercise 6.1 Define required Constraints on  the Tables
+## Exercise 6.1 Define required Constraints on the Tables <a name="subex1"></a>
 ---
 **Create primary keys on the LONDON_BIKE_EDGES and LONDON_BIKE_VERTICES tables, and foreign keys on the SOURCE and TARGET column.**
 
@@ -21,7 +21,7 @@ ALTER TABLE DAT260.LONDON_BIKE_EDGES ALTER("SOURCE" BIGINT NOT NULL REFERENCES "
 ALTER TABLE DAT260.LONDON_BIKE_EDGES ALTER("TARGET" BIGINT NOT NULL REFERENCES "DAT260"."LONDON_BIKE_VERTICES" ("osmid") ON UPDATE CASCADE ON DELETE CASCADE);
 ```
 
-## Exercise 6.2 Create a Graph Workspace
+## Exercise 6.2 Create a Graph Workspace <a name="subex2"></a> 
 ---
 **Create a `GRAPH WORKSPACE` on top of the LONDON_BIKE_EDGES and LONDON_BIKE_VERTICES tables.**
 
@@ -40,4 +40,4 @@ CREATE GRAPH WORKSPACE "DAT260"."BIKE_GRAPH"
 
 We have defined constraints on our VERTICES and EDGES tables and created a GRAPH WORKSPACE. We are all set up to run some graph stuff.
 
-Continue to - [Exercise 7 - Excercise 7 ](../ex7/README.md)
+Continue to - [Exercise 7 - Use a GRAPH Procedure to calculate Shortest Paths on the street network ](../ex7/README.md)

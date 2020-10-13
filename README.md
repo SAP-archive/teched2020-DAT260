@@ -38,10 +38,21 @@ The requirements to follow the exercises in this repository are...
     - [Exercise 5.1 - Persist Voronoi Cells for all Nodes](exercises/ex5#subex1)
     - [Exercise 5.2 - Enhance POI Table with Node Reference](exercises/ex5#subex2)
 - [Exercise 6 - Prepare data for the Graph Engine and create a Graph Workspace](exercises/ex6/)
+    - [Exercise 6.1 Define required Constraints on the Tables](exercises/ex6#subex1)
+    - [Exercise 6.2 Create a Graph Workspace](exercises/ex6#subex2)
 - [Exercise 7 - Use a GRAPH Procedure to calculate Shortest Paths on the street network](exercises/ex7/)
+    - [Exercise 7.1 Define required Table Type for the Procedure](exercises/ex7#subex1)
+    - [Exercise 7.2 Create a GRAPH Procedure for Shortest Path Calculation](exercises/ex7#subex2)
+    - [Exercise 7.3 Anonymous Blocks - Running GRAPH Code in an ad-hoc manner <a name="subex3"></a> ](exercises/ex7#subex3)
 - [Exercise 8 - Calculate Shortest Paths with a more complex cost function](exercises/ex8/)
-    - [Exercise 8.1 - Setup Cost Function (Pubs, Cycle Ways & Bicycle Repair)](exercises/ex8#subex1)
-- [Exercise 9 - Centrality & Subnetworks](exercises/ex9/)
+    - [Exercise 8.1 Generate a numeric column that contains the maximum speed allowed information](exercises/ex8#subex1)
+    - [Exercise 8.2 Calculate Shortest Paths, minimizing the time it takes to get from start to end](exercises/ex8#subex2)
+    - [Exercise 8.3 Finding Pubs and Bikelanes](exercises/ex8#subex3)
+    - [Exercise 8.4 Wrapping a Procedure in a Table Function](exercises/ex8#subex4)
+- [Exercise 9 - Calculate Isochrones and Closeness Centrality](exercises/ex9/)
+    - [Exercise 9.1 Explore the Tube Data and Create a Graph workspace](exercises/ex9#subex1)
+    - [Exercise 9.2 Using Shortest_Path_One_To_All](exercises/ex9#subex2)
+    - [Exercise 9.3 Using TRAVERSE BFS to implement Closeness Centrality](exercises/ex9#subex3)
 
 ## How to obtain support
 

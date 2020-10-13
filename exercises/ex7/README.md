@@ -1,7 +1,7 @@
 # Exercise 7 - Use a GRAPH Procedure to calculate Shortest Paths on the street network
 Once you have a GRAPH WORKSPACE defined, you can run OpenCypher queries for pattern matching workload, or create GRAPH procedures for network analysis. In this exercise we will create a database procedure that uses the built-in function to calculate a shortest path between a start and a end vertex, i.e. a street intersection.
 
-## Exercise 7.1 Define required Table Type for the Procedure
+## Exercise 7.1 Define required Table Type for the Procedure <a name="subex2"></a>
 ---
 **Create a `TABLE TYPE` that describes the output table of the procedure, containing ID, SOURCE, TARGET, EDGE_ORDER (BIGINT), and length (DOUBLE)**
 
@@ -14,7 +14,7 @@ CREATE TYPE "DAT260"."TT_SPOO_EDGES" AS TABLE (
 ;
 ```
 
-## Exercise 7.2 Create a GRAPH Procedure for Shortest Path Calculation
+## Exercise 7.2 Create a GRAPH Procedure for Shortest Path Calculation <a name="subex2"></a>
 ---
 **Create a GRAPH procedure, using the built-in Shortest_Path function.**
 
@@ -50,7 +50,7 @@ CALL "DAT260"."GS_SPOO"(14680080, 7251951621, 'ANY', ?, ?);
 ```
 TODO: add an image
 
-## Exercise 7.3 Anonymous Blocks - Running GRAPH Code in an ad-hoc manner
+## Exercise 7.3 Anonymous Blocks - Running GRAPH Code in an ad-hoc manner <a name="subex3"></a> 
 
 Sometimes it is more convenient to generate and execute the GRAPH code dynamically without creating a procedure in the database. This approach is called "anonymous blocks". The code below is basically the same as in the procedure above, but this time it is execute in a DO - BEGIN - END block.
 ```sql
@@ -68,4 +68,4 @@ END;
 
 We have created a GRAPH procedure which calculates a hop distance shortest path between start and end vertex.
 
-Continue to - [Exercise 8 - Excercise 8 ](../ex7/README.md)
+Continue to - [Exercise 8 - Calculate Shortest Paths with a more complex cost function](../ex7/README.md)
