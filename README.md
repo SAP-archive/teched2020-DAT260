@@ -38,8 +38,8 @@ The requirements to follow the exercises in this repository are...
     - [Exercise 5.1 - Persist Voronoi Cells for all Nodes](exercises/ex5#subex1)
     - [Exercise 5.2 - Enhance POI Table with Node Reference](exercises/ex5#subex2)
 - [Exercise 6 - Prepare data for the Graph Engine and create a Graph Workspace](exercises/ex6/)
-- [Exercise 7 - Calculate Shortest Paths on the street network](exercises/ex7/)
-- [Exercise 8 - Calculate Low-Cost Path from Start to Target](exercises/ex8/)
+- [Exercise 7 - Use a GRAPH Procedure to calculate Shortest Paths on the street network](exercises/ex7/)
+- [Exercise 8 - Calculate Shortest Paths with a more complex cost function](exercises/ex8/)
     - [Exercise 8.1 - Setup Cost Function (Pubs, Cycle Ways & Bicycle Repair)](exercises/ex8#subex1)
 - [Exercise 9 - Centrality & Subnetworks](exercises/ex9/)
 
