@@ -45,12 +45,27 @@ Note the language identifier of the procedure: "GRAPH". The database procedure i
 
 ```sql
 CALL "DAT260"."GS_SPOO"(i_startVertex => 14680080, i_endVertex => 7251951621, i_direction => 'ANY', o_path_length => ?, o_edges => ?);
--- or in shortest
+-- or in short
 CALL "DAT260"."GS_SPOO"(14680080, 7251951621, 'ANY', ?, ?);
 ```
 TODO: add an image
+
+## Exercise 7.3 Anonymous Blocks - Running GRAPH Code in an ad-hoc manner
+
+Sometimes it is more convenient to generate and execute the GRAPH code dynamically without creating a procedure in the database. This approach is called "anonymous blocks". The code below is basically the same as in the procedure above, but this time it is execute in a DO - BEGIN - END block.
+```sql
+DO ( OUT o_edges "DAT260"."TT_SPOO_EDGES" => ? ) LANGUAGE GRAPH
+BEGIN
+	GRAPH g = Graph("DAT260", "BIKE_GRAPH");
+	VERTEX v_start = Vertex(:g, 14680080L);
+	VERTEX v_end = Vertex(:g, 7251951621L);
+	WeightedPath<BIGINT> p = Shortest_Path(:g, :v_start, :v_end, 'ANY');
+	o_edges = SELECT :e."ID", :e."SOURCE", :e."TARGET", :EDGE_ORDER, :e."length" FOREACH e IN Edges(:p) WITH ORDINALITY AS EDGE_ORDER;
+END;
+```
+
 ## Summary
 
-We have created a GRAPH procedure which calculates a hop distance shortest path between start and end vertex. 
+We have created a GRAPH procedure which calculates a hop distance shortest path between start and end vertex.
 
 Continue to - [Exercise 8 - Excercise 8 ](../ex7/README.md)
