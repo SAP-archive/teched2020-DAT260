@@ -32,7 +32,7 @@ The requirements to follow the exercises in this repository are...
     - [Exercise 3.2 - Add Flag for all Nodes in Circle](exercises/ex3#subex2)
 - [Exercise 4 - Check out the Suitability of this Area for Bike Rides](exercises/ex4/)
     - [Exercise 4.1 - Identify Cycleways](exercises/ex4#subex1)
-    - [Exercise 4.2 - Create one Geometry or SVG to Visualize Cycleways](exercises/ex4#subex2)
+    - [Exercise 4.2 - Create a Scalable Vector Graphic (SVG) to Visualize Cycleways](exercises/ex4#subex2)
     - [Exercise 4.3 - Use Voronoi to Understand the Coverage of Bike Repair Stations](exercises/ex4#subex3)
 - [Exercise 5 - Snap POIs to Nodes of Street Network](exercises/ex5/)
     - [Exercise 5.1 - Persist Voronoi Cells for all Nodes](exercises/ex5#subex1)
