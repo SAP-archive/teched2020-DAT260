@@ -1,45 +1,38 @@
-Planned content:
-* Technical setup
-    * Setup HANA Cloud Trial
-    * Create personal user (not DBADMIN)
-    * Access DB Explorer
-    * Download data for exercises
-    * Upload data to your trial instance
-    * Execute test script to see that spatial and graph is working
-* Demo scenario
-    * data source
-    * how data has been prepared (e.g. osmnx)
-    * goals (detailed; high-level also on intro site)
-* Spatial Visualization
-    * DBeaver
-    * Wicket with st_transform and st_aswkt
-    * ST_AsSVG
-* General structure of exercises
-* For more background: Devtoberfest on Youtube
+# Getting Started
 
-# Level 1 Heading
+This section should get you started by going through all technical pre-requisites. Additionally you will be introduced to the dataset and some background information and material will be given
 
-In this exercise, you will...
+## Setup SAP HANA Cloud Trial Instance <a name="subex1"></a>
+- create instance
+- graph and spatial is there
+- create user other than dbadmin and assign right for importing catalog objects
+![](images/privilege_assignment.png)
+- access db explorer
 
-## Level 2 Heading
+## Base Data & Demo Scenario <a name="subex2"></a>
+- download data
+- upload data to trial instance
+- execute test script to see that spatial and graph is working
+- description of data model and data source
+- how data has been prepared (e.g. osmnx)
 
-After completing these steps you will have....
+## Spatial Visualizations <a name="subex3"></a>
+- dbeaver
+- wicket with st_transform and st_aswkt
+- st_assvg and browser (increase clob limit)
 
-1.	Click here.
-<br>![](/exercises/ex0/images/00_00_0010.png)
+## General Structure of Exercises <a name="subex4"></a>
+- exercise text and solution
+- 1-5 = spatial
+- 6-9 = graph
 
-2.	Insert this code.
-```
- DATA(lt_params) = request->get_form_fields(  ).
- READ TABLE lt_params REFERENCE INTO DATA(lr_params) WITH KEY name = 'cmd'.
-  IF sy-subrc <> 0.
-    response->set_status( i_code = 400
-                     i_reason = 'Bad request').
-    RETURN.
-  ENDIF.
-```
+## Background Material <a name="subex5"></a>
+- devtoberfest
+- spatial reference
+- graph reference
+- blogs
 
 ## Summary
-
-Now that you have ... 
-Continue to - [Exercise 1 - Exercise 1 Description](../ex1/README.md)
+You should now have an overview of the technical pre-requisites as well as the necessary background information to master the exercises of DAT260!
+ 
+Continue to - [Exercise 1 - Add Planar Geometries Based on WGS84 Geometries](../ex1/README.md)
