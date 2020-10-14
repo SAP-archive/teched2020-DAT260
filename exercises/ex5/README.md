@@ -74,6 +74,7 @@ WHEN MATCHED THEN UPDATE SET lp.VERTEX_OSMID = lv."osmid";
 ```
 
 This picture illustrates the snapping logic.
+
 ![](images/poi_snapping.png)
 
 ## Summary
