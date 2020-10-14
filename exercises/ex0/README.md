@@ -13,6 +13,7 @@ Planned content:
 * Spatial Visualization
     * DBeaver
     * Wicket with st_transform and st_aswkt
+    * ST_AsSVG
 * General structure of exercises
 * For more background: Devtoberfest on Youtube
 
