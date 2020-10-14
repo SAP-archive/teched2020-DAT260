@@ -19,6 +19,9 @@ CREATE TYPE "DAT260"."TT_SPOO_EDGES" AS TABLE (
 **Create a GRAPH procedure, using the built-in Shortest_Path function.**
 
 ---
+The core of this procedure is the call of the built-in graph algorithm:
+
+`WeightedPath<BIGINT> p = Shortest_Path(:g, :v_start, :v_end, :i_direction);`
 
 ```sql
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO"(
@@ -50,7 +53,7 @@ CALL "DAT260"."GS_SPOO"(14680080, 7251951621, 'ANY', ?, ?);
 ```
 TODO: add an image
 
-## Exercise 7.3 Anonymous Blocks - Running GRAPH Code in an ad-hoc manner <a name="subex3"></a> 
+## Exercise 7.3 Anonymous Blocks - Running GRAPH Code in an ad-hoc manner <a name="subex3"></a>
 
 Sometimes it is more convenient to generate and execute the GRAPH code dynamically without creating a procedure in the database. This approach is called "anonymous blocks". The code below is basically the same as in the procedure above, but this time it is execute in a DO - BEGIN - END block.
 ```sql
@@ -68,4 +71,4 @@ END;
 
 We have created a GRAPH procedure which calculates a hop distance shortest path between start and end vertex.
 
-Continue to - [Exercise 8 - Calculate Shortest Paths with a more complex cost function](../ex7/README.md)
+Continue to - [Exercise 8 - Calculate Shortest Paths with a more complex cost function](../ex8/README.md)

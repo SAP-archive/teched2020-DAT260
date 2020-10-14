@@ -10,26 +10,27 @@ In the previous exercise we have use hop distance to calculate a shortest path. 
 ---
 
 ```sql
-ALTER TABLE "DAT260"."LONDON_BIKE_EDGES" ADD("SPEED_MPH" INT);
-UPDATE "DAT260"."LONDON_BIKE_EDGES"
+ALTER TABLE "DAT260"."LONDON_EDGES" ADD("SPEED_MPH" INT);
+UPDATE "DAT260"."LONDON_EDGES"
 	SET "SPEED_MPH" = TO_INT(REPLACE("maxspeed", ' mph', ''))
 	WHERE REPLACE("maxspeed", ' mph', '') <> "maxspeed" ;
-SELECT "SPEED_MPH", COUNT(*) AS C FROM "DAT260"."LONDON_BIKE_EDGES" GROUP BY "SPEED_MPH" ORDER BY C DESC;
+SELECT "SPEED_MPH", COUNT(*) AS C FROM "DAT260"."LONDON_EDGES" GROUP BY "SPEED_MPH" ORDER BY C DESC;
 -- let's add a default value on the segments that do not have a speed information
-UPDATE "DAT260"."LONDON_BIKE_EDGES" SET "SPEED_MPH" = 30 WHERE "SPEED_MPH" IS NULL;
+UPDATE "DAT260"."LONDON_EDGES" SET "SPEED_MPH" = 30 WHERE "SPEED_MPH" IS NULL;
 ```
 ## Exercise 8.2 Calculate Shortest Paths, minimizing the time it takes to get from start to end <a name="subex2"></a>
 
 Just like in the previous example, we define a table type and a procedure. This time, we are using "length"/SPEED_MPH" as cost function. Syntactically, the cost function is a lambda function like this:
-```sql
+`
 (Edge e) => DOUBLE{ return :e."length"/DOUBLE(:e."SPEED_MPH"); }
-```
+`
 
 ```sql
 CREATE TYPE "DAT260"."TT_SPOO_WEIGHTED_EDGES" AS TABLE (
     "ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SPEED_MPH" INT
 );
-
+```
+```sql
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_WEIGTHED"(
 	IN i_startVertex BIGINT, 		-- INPUT: the ID of the start vertex
 	IN i_endVertex BIGINT, 			-- INPUT: the ID of the end vertex
@@ -72,6 +73,7 @@ First, let's calculate PUBINESS by counting pubs within 100m distance.
 
 ```SQL
 ALTER TABLE "DAT260"."LONDON_EDGES" ADD ("PUBINESS" DOUBLE DEFAULT 0);
+
 MERGE INTO "DAT260"."LONDON_EDGES"
 	USING (
 		SELECT e."ID", COUNT(*) AS "PUBINESS" FROM
@@ -83,14 +85,30 @@ MERGE INTO "DAT260"."LONDON_EDGES"
 	ON "DAT260"."LONDON_EDGES"."ID" = U."ID"
 WHEN MATCHED THEN UPDATE SET "DAT260"."LONDON_EDGES"."PUBINESS" = U."PUBINESS";
 ```
+Let's take a look at the distribution of our PUBINESS property.
+```SQL
 
+SELECT "PUBINESS", COUNT(*) AS C FROM "DAT260"."LONDON_EDGES" GROUP BY "PUBINESS" ORDER BY "PUBINESS" ASC;
+```
 Then we'll use the new measure as part of the cost function for path finding with mode "pub".
+
+`Shortest_Path(:g, :v_start, :v_end, (Edge e) => DOUBLE {`<br>`
+RETURN :e."length"/(5.0*:e."PUBINESS"+1.0); `<br>`
+}, :i_direction);`
+
+For pathfinding with mode "bike", we'll use a conditional cost function. Street segments which are of type "cycleway" are boosted by dividing the length by 10.
+
+`Shortest_Path(:g, :v_start, :v_end, (EDGE e)=> DOUBLE {`<br>`
+IF(:e."highway" == 'cycleway') { RETURN :e."length"/10.0; }`<br>`
+ELSE { RETURN :e."length"; } `<br>`
+}, :i_direction);`
 
 ```SQL
 CREATE TYPE "DAT260"."TT_SPOO_MULTI_MODE" AS TABLE (
 		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SPEED_MPH" INT, "highway" NVARCHAR(5000)
 );
-
+```
+```SQL
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_MULTI_MODE"(
 	IN i_startVertex BIGINT, 		-- the ID of the start vertex
 	IN i_endVertex BIGINT, 			-- the ID of the end vertex
@@ -125,10 +143,12 @@ LANGUAGE GRAPH READS SQL DATA AS BEGIN
 		o_edges = SELECT :e."ID", :e."SOURCE", :e."TARGET", :EDGE_ORDER, :e."length", :e."SPEED_MPH", :e."highway" FOREACH e IN Edges(:p) WITH ORDINALITY AS EDGE_ORDER;
 	}
 END;
-
-CALL "DAT260"."GS_SPOO_MULTI_MODE"(14680080, 7251951621, 'ANY', 'pub', ?, ?, ?);
 ```
-## Exercise 8.4 Wrapping a Procedure in a Table Function <a name="subex4"></a> 
+```SQL
+CALL "DAT260"."GS_SPOO_MULTI_MODE"(14680080, 7251951621, 'ANY', 'pub', ?, ?, ?);
+CALL "DAT260"."GS_SPOO_MULTI_MODE"(14680080, 7251951621, 'ANY', 'bike', ?, ?, ?);
+```
+## Exercise 8.4 Wrapping a Procedure in a Table Function <a name="subex4"></a>
 
 The procedure above returns more than one output - the path's length, weight, and a table with the edges. Sometimes it is convenient to wrap a GRAPH procedure in a table function, returning only a table output. Table functions are called via SELECT and this is a convenient way to post-process graph result - simply use the full power of SQL on your result set.
 
@@ -136,6 +156,8 @@ The procedure above returns more than one output - the path's length, weight, an
 CREATE TYPE "DAT260"."TT_EDGES_SPOO_F" AS TABLE (
 		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SHAPE" ST_GEOMETRY
 );
+```
+```SQL
 CREATE OR REPLACE FUNCTION "DAT260"."F_SPOO_EDGES"(
 	IN i_startVertex BIGINT, 		-- the ID of the start vertex
 	IN i_endVertex BIGINT, 			-- the ID of the end vertex
@@ -147,7 +169,7 @@ LANGUAGE SQLSCRIPT READS SQL DATA AS
 BEGIN
 	DECLARE o_path_length DOUBLE;
 	DECLARE o_path_weight DOUBLE;
-    CALL "DAT260"."GS_SPOO_MULTI_MODE"(:i_startVertex, :i_endVertex, :I_DIRECTION, :i_mode, o_path_length, o_path_weight, o_vertices, o_edges);
+    CALL "DAT260"."GS_SPOO_MULTI_MODE"(:i_startVertex, :i_endVertex, :i_direction, :i_mode, o_path_length, o_path_weight, o_edges);
     RETURN SELECT lbe.* FROM :o_edges AS P LEFT JOIN "DAT260"."LONDON_EDGES" lbe ON P."ID" = lbe."ID";
 END;
 ```

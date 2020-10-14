@@ -21,13 +21,18 @@ CREATE GRAPH WORKSPACE "DAT260"."TUBE_GRAPH"
 
 ## Exercise 9.2 Using Shortest_Path_One_To_All <a name="subex2"></a>
 
-The Shortest_Path_One_To_All is similar to the Shortest_Path we have seen in the previous exercises. However, the result is not a WeigthedPath, but a Graph. We will use the travel "time" as cost function.
+The Shortest_Path_One_To_All is similar to the Shortest_Path we have seen in the previous exercises. However, the result is not a WeigthedPath, but a Graph. We will use the travel "time" as cost function. The vertices of this output graph have an attribute "CALCULATED_COST" which indicates the minimum time required to reach the vertex.
 
+`GRAPH g_spoa = SHORTEST_PATHS_ONE_TO_ALL(:g, :v_start, `<br>`
+"CALCULATED_COST", `<br>`
+(Edge e) => DOUBLE{ RETURN DOUBLE(:e."time"); `<br>`
+}, 'ANY');`
 ```SQL
 CREATE TYPE "DAT260"."TT_VERTICES_SPOA" AS TABLE (
     "ID" BIGINT, "CALCULATED_COST" DOUBLE
 );
-
+```
+```SQL
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOA"(
 	IN i_start BIGINT,
 	OUT o_vertices "DAT260"."TT_VERTICES_SPOA"
@@ -39,20 +44,29 @@ BEGIN
 	GRAPH g_spoa = SHORTEST_PATHS_ONE_TO_ALL(:g, :v_start, "CALCULATED_COST", (Edge e) => DOUBLE{ return DOUBLE(:e."time"); }, 'ANY');
 	o_vertices = SELECT :v."ID", :v."CALCULATED_COST" FOREACH v IN Vertices(:g_spoa);
 END;
-
-CALL "DAT260"."GS_CC_SINGLE_SOURCE_4"(124, ?);
+```
+```SQL
+CALL "DAT260"."GS_SPOA"(124, ?);
 ```
 TODO: add image
 
-## Exercise 9.3 Using TRAVERSE BFS to implement Closeness Centrality <a name="subex3"></a> 
+## Exercise 9.3 Using TRAVERSE BFS to implement Closeness Centrality <a name="subex3"></a>
 
-When you traverse a network in a breadth first search manner, you explore the vertices level by level. Starting at a vertex, you first visit all its direct neighbors, then the neighbors of the neighbors and so forth. BFS is a fundamental building block for many custom graph algorithms. In HANA, you can "hook" into the vertex/edge "visit" events, executing any logic. In the example below, we hook into the VISIT VERTEX events and calculate a count and a cost. These numbers are then used to derive multiple closeness centrality measures.
+When you traverse a network in a breadth first search manner, you explore the vertices level by level. Starting at a vertex, you first visit all its direct neighbors, then the neighbors of the neighbors and so forth. BFS is a fundamental building block for many custom graph algorithms. In HANA, you can "hook" into the vertex/edge "visit" events, executing any logic.
+
+`TRAVERSE BFS ('ANY') :g FROM :v_start`<br>`
+ON VISIT VERTEX (Vertex v_visited, BIGINT lvl) {`<br>
+[any logic goes here]<br>
+`};`
+
+In the example below, we hook into the VISIT VERTEX event and calculate a count and a cost. These numbers are then used to derive multiple closeness centrality measures.
 
 ```SQL
 CREATE TYPE "DAT260"."TT_RESULT_CC" AS TABLE (
     "ID" BIGINT, "CLOSENESS_CENTRALITY" DOUBLE, "NORMALIZED_CLOSENESS_CENTRALITY" DOUBLE, "HARMONIC_CENTRALITY" DOUBLE, "NORMALIZED_HARMONIC_CENTRALITY" DOUBLE
 );
-
+```
+```SQL
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_CC_SINGLE_SOURCE"(
 	IN i_start BIGINT,
 	OUT o_vertices "DAT260"."TT_RESULT_CC"
@@ -87,9 +101,11 @@ BEGIN
 		v_start."HARMONIC_CENTRALITY" = :v_sumReciprocCost;
 		v_start."NORMALIZED_HARMONIC_CENTRALITY" = :v_sumReciprocCost/DOUBLE(:v_sumNodes);
 	}
-	o_vertices = SELECT :v."ID", :v."CLOSENESS_CENTRALITY", :v."NORMALIZED_CLOSENESS_CENTRALITY", :v."HARMONIC_CENTRALITY", :v."NORMALIZED_HARMONIC_CENTRALITY" FOREACH v IN Vertices(:g);
+	MULTISET<Vertex> m_v = v IN Vertices(:g) WHERE :v."CLOSENESS_CENTRALITY" >= 0.0;
+	o_vertices = SELECT :v."ID", :v."CLOSENESS_CENTRALITY", :v."NORMALIZED_CLOSENESS_CENTRALITY", :v."HARMONIC_CENTRALITY", :v."NORMALIZED_HARMONIC_CENTRALITY" FOREACH v IN :m_v;
 END;
-
+```
+```SQL
 CALL "DAT260"."GS_CC_SINGLE_SOURCE"(124, ?);
 ```
 
@@ -114,7 +130,8 @@ BEGIN
 	result = MAP_MERGE(:startVertices, "DAT260"."F_CC_SINGLE_SOURCE"(:startVertices."ID"));
 	RETURN :result;
 END;
-
+```
+```SQL
 SELECT * FROM "DAT260"."F_CC_MAP_MERGE"() ORDER BY "NORMALIZED_CLOSENESS_CENTRALITY" DESC;
 ```
 Again, we can mix the results from a graph function with other SQL operations, like a JOIN.
@@ -125,7 +142,7 @@ SELECT *
   ON C."ID" = S."ID"
 	ORDER BY "NORMALIZED_CLOSENESS_CENTRALITY" DESC;
 ```
-
+TODO: add image
 ## Summary
 
 You've now seen how to use Shortest_Path_One_To_All and TRAVERSE BFS.
