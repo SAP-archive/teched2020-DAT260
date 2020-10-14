@@ -1,12 +1,12 @@
-# Exercise 7 - Use a GRAPH Procedure to calculate Shortest Paths on the street network
-Once you have a GRAPH WORKSPACE defined, you can run OpenCypher queries for pattern matching workload, or create GRAPH procedures for network analysis. In this exercise we will create a database procedure that uses the built-in function to calculate a shortest path between a start and a end vertex, i.e. a street intersection.
+# Exercise 7 - Use a GRAPH Procedure to calculate Shortest Paths on the Street Network
+Once you have a `GRAPH WORKSPACE` defined, you can run [openCypher](https://www.opencypher.org/) queries for [pattern matching](https://help.sap.com/viewer/11afa2e60a5f4192a381df30f94863f9/2020_03_QRC/en-US/4c3ee700e7a8458baed3f1141d9380f3.html) workload, or create GRAPH procedures for network analysis. In this exercise we will create a database procedure that uses the built-in function to calculate a shortest path between two vertices.
 
 ## Exercise 7.1 Define required Table Type for the Procedure <a name="subex2"></a>
 ---
 **Create a `TABLE TYPE` that describes the output table of the procedure, containing ID, SOURCE, TARGET, EDGE_ORDER (BIGINT), and length (DOUBLE)**
 
 ---
-If you are familiar with HANA database procedures using SQLScript, you already know how to handle table-like results. A clean way to do this is by defining and using TABLE TYPES. The same approach is valid for GRAPH procedures.
+If you are familiar with HANA database procedures using SQLScript, you already know how to handle table-like results. A clean way to do this is by defining and using `TABLE TYPES`. The same approach is valid for GRAPH procedures. Our TABLE TYPE `TT_SPOO_EDGES` describes the structure of the path result. It includes the ID of the edge and the ORDER in which the edges are traversed.
 
 ```sql
 CREATE TYPE "DAT260"."TT_SPOO_EDGES" AS TABLE (
@@ -19,9 +19,11 @@ CREATE TYPE "DAT260"."TT_SPOO_EDGES" AS TABLE (
 **Create a GRAPH procedure, using the built-in Shortest_Path function.**
 
 ---
-The core of this procedure is the call of the built-in graph algorithm:
+The procedure below looks a similar to SQLScript procedures - the header describes input and output variables, followed by the actual code. The code below is a graph specific programming language called GRAPH. Instead of working with relational objects and operations like tables and SQL, GRAPH procedures operate on vertices and edges. The core of this procedure is the call of the built-in graph algorithm:
 
 `WeightedPath<BIGINT> p = Shortest_Path(:g, :v_start, :v_end, :i_direction);`
+
+where `g` is our graph, `v_start` and `v_end` are the start/end vertices of the path we are searching, and `i_direction` indicates the direction in which edges can be traversed (OUTGOING, INCOMING, or ANY). The result is assigned to a path object `p`.
 
 ```sql
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO"(
@@ -44,14 +46,16 @@ LANGUAGE GRAPH READS SQL DATA AS BEGIN
 END;
 ```
 
-Note the language identifier of the procedure: "GRAPH". The database procedure is executed like any other - using a CALL statement providing the input parameters.
+The database procedure is executed like any other - using a CALL statement providing the input parameters. We'll find a path from ~Canary Wharf (1433737988) to Blues Kitchen (1794145673).
 
 ```sql
-CALL "DAT260"."GS_SPOO"(i_startVertex => 14680080, i_endVertex => 7251951621, i_direction => 'ANY', o_path_length => ?, o_edges => ?);
--- or in short
-CALL "DAT260"."GS_SPOO"(14680080, 7251951621, 'ANY', ?, ?);
+CALL "DAT260"."GS_SPOO"(i_startVertex => 1433737988, i_endVertex => 1794145673, i_direction => 'ANY', o_path_length => ?, o_edges => ?);
+-- or in short 14680080, 7251951621
+CALL "DAT260"."GS_SPOO"(1433737988, 1794145673, 'ANY', ?, ?);
 ```
-TODO: add an image
+The result is a set of edges/street segments that make up the path. The `EDGE_ORDER` value identifies the sequence. The procedure also returns `O_PATH_LENGTH` = 464 which is the number of minimal hops it takes from Canary Wharf to Blues Kitchen.
+
+![](images/SPOO.png)
 
 ## Exercise 7.3 Anonymous Blocks - Running GRAPH Code in an ad-hoc manner <a name="subex3"></a>
 

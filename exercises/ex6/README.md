@@ -1,7 +1,7 @@
 # Exercise 6 - Prepare data for the Graph Engine and create a Graph Workspace
 
-Our graph dataset describes the London street network. Formally, a graph consists of nodes/vertices and edges/links/connections. In our case, we have street segments stored in the LONDON_EDGES table, and intersections in the LONDON_BIKE_VERTIES table.
-The HANA Graph engine requires a key on both tables, and the source and target columns of the edges table must not contain NULLs. To ensure the graph's consistency, it is also good practice to have a foreign key relationship defined on source and target column.
+Our graph dataset describes the London street network. Formally, a graph consists of nodes/vertices and edges/links/connections. In our case, we have street segments stored in the `LONDON_EDGES` table, and intersections in the `LONDON_VERTIES` table.
+The HANA Graph engine requires a key on both tables, and the source and target columns of the edges table must not contain NULLs. To ensure the graph's consistency, it is also good practice to have a foreign key relationship defined on source and target column. Doing so will prevent "dangling edges", i.e. edges without vertices.
 Once your data is prepared, you expose it to the HANA Graph engine via a GRAPH WORKSPACE.
 
 ## Exercise 6.1 Define required Constraints on the Tables <a name="subex1"></a>
@@ -35,6 +35,6 @@ CREATE GRAPH WORKSPACE "DAT260"."BIKE_GRAPH"
 ```
 ## Summary
 
-We have defined constraints on our VERTICES and EDGES tables and created a GRAPH WORKSPACE. We are all set up to run some graph stuff.
+We have defined constraints on our `LONDON_VERTICES` and `LONDON_EDGES` table and created a `GRAPH WORKSPACE`. We are all set up to run some graph stuff.
 
 Continue to - [Exercise 7 - Use a GRAPH Procedure to calculate Shortest Paths on the street network ](../ex7/README.md)

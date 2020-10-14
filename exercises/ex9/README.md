@@ -1,8 +1,9 @@
 # Exercise 9 - Calculate Isochrones and Closeness Centrality
 
-In this exercise we will explore two more fundamental functions: Shortest Paths One-To-All (SPOA) and Breadth First Search (BFS). The first one does the obvious - given a start vertex, it calculates the distance/cost to every other vertex. SPOA can be used to calculate isochrones, i.e. areas with the same drive time distance. BFS is helpful to effectively implement Closeness Centrality - one of multiple standard centrality algorithms to identify the "importance" of a vertex in a network.
-For the nest exercises we will use a different network, the London Tube network. It is a simple dataset in which the tube stations represent vertices, the sequence of stations along a tube line are the edges.
-TODO: add image
+In this exercise we will explore two more fundamental functions: `Shortest Paths One-To-All` (SPOA) and `Breadth First Search` (BFS). The first one does the obvious - given a start vertex, it calculates the distance/cost to every other vertex in the graph. SPOA can be used to calculate [isochrones](https://wiki.openstreetmap.org/wiki/Isochrone), i.e. areas with the same drive time distance. [BFS](https://en.wikipedia.org/wiki/Breadth-first_search) is a fundamental building block for many graph algorithms, including [Closeness Centrality](https://en.wikipedia.org/wiki/Closeness_centrality) - one of multiple standard centrality algorithms to identify the "importance" of a vertex in a network.<br>
+For the next exercises we will use a different network, the London Tube network. It is a simple dataset in which the tube stations represent vertices, the sequence of stations along a tube line are the edges.
+
+![](images/TUBE.png)
 
 ## Exercise 9.1 Explore the Tube Data and Create a Graph workspace <a name="subex1"></a>
 
@@ -21,7 +22,7 @@ CREATE GRAPH WORKSPACE "DAT260"."TUBE_GRAPH"
 
 ## Exercise 9.2 Using Shortest_Path_One_To_All <a name="subex2"></a>
 
-The Shortest_Path_One_To_All is similar to the Shortest_Path we have seen in the previous exercises. However, the result is not a WeigthedPath, but a Graph. We will use the travel "time" as cost function. The vertices of this output graph have an attribute "CALCULATED_COST" which indicates the minimum time required to reach the vertex.
+The Shortest_Path_One_To_All is similar to the Shortest_Path we have seen in the previous exercises. However, the result is not a `WeigthedPath`, but a `Graph`. We will use the travel "time" as cost function. The vertices of this output graph have an attribute "CALCULATED_COST" which indicates the minimum time required to reach the vertex.
 
 `GRAPH g_spoa = SHORTEST_PATHS_ONE_TO_ALL(:g, :v_start, `<br>`
 "CALCULATED_COST", `<br>`

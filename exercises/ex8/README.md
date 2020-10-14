@@ -18,6 +18,11 @@ SELECT "SPEED_MPH", COUNT(*) AS C FROM "DAT260"."LONDON_EDGES" GROUP BY "SPEED_M
 -- let's add a default value on the segments that do not have a speed information
 UPDATE "DAT260"."LONDON_EDGES" SET "SPEED_MPH" = 30 WHERE "SPEED_MPH" IS NULL;
 ```
+
+This is the SPEED_MPH distribution after updating with default values.
+
+![](images/SPEED.png)
+
 ## Exercise 8.2 Calculate Shortest Paths, minimizing the time it takes to get from start to end <a name="subex2"></a>
 
 Just like in the previous example, we define a table type and a procedure. This time, we are using "length"/SPEED_MPH" as cost function. Syntactically, the cost function is a lambda function like this:
@@ -31,7 +36,7 @@ CREATE TYPE "DAT260"."TT_SPOO_WEIGHTED_EDGES" AS TABLE (
 );
 ```
 ```sql
-CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_WEIGTHED"(
+CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_WEIGHTED"(
 	IN i_startVertex BIGINT, 		-- INPUT: the ID of the start vertex
 	IN i_endVertex BIGINT, 			-- INPUT: the ID of the end vertex
 	IN i_direction NVARCHAR(10), 	-- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
@@ -59,17 +64,22 @@ END;
 Call the procedure.
 
 ```sql
-CALL "DAT260"."GS_SPOO_WEIGTHED"(14680080, 7251951621, 'ANY', ?, ?, ?);
+CALL "DAT260"."GS_SPOO_WEIGHTED"(1433737988, 1794145673, 'ANY', ?, ?, ?);
 ```
 
-TODO: add image
+![](images/SPOO_WEIGHTED.png)
+
+If you bring this on a map it looks like this.
+
+![](images/SPOO_WEIGHTED_MAP_COMBI.png)
 
 ## Exercise 8.3 Finding Pubs and Bikelanes <a name="subex3"></a>
 
-Finding the fastest route is easy. Let's find two more interesting paths. First, we want find paths suitable for bikes. We can do so, by boosting street segments which are cycleways. Note that in most cases you can take cycleways only. The path algorithm will choose cycleways unless they are 10x longer than a normal road. For this logic we will use an IF statement within the cost function.
-Second, we would like to find "attractive" paths. We will calculate a new measure for the edges: "PUBINESS" - which is derived from the number of pubs nearby.
+Finding the fastest route is easy. Let's find two more interesting paths. First, we want find paths suitable for bikes. We can do so by boosting street segments which are "cycleways". Note that in most cases you cannot take cycleways only. The path algorithm will choose cycleways unless they are 10x longer than a normal road. For this logic we will use an `IF` statement within the cost function.
+Second, we would like to find "attractive" paths. We will calculate a new measure for the edges - "PUBINESS" - which is derived from the number of pubs nearby.
 
-First, let's calculate PUBINESS by counting pubs within 100m distance.
+First, let's calculate PUBINESS by counting pubs within 100m distance and ass this to our `LONDON_EDGES` table. We are using the spatial ST_WithinDistance predicate as join condition:<br>
+`ON pubs."SHAPE".ST_WithinDistance(e."EDGESHAPE", 100) = 1`
 
 ```SQL
 ALTER TABLE "DAT260"."LONDON_EDGES" ADD ("PUBINESS" DOUBLE DEFAULT 0);
@@ -90,7 +100,9 @@ Let's take a look at the distribution of our PUBINESS property.
 
 SELECT "PUBINESS", COUNT(*) AS C FROM "DAT260"."LONDON_EDGES" GROUP BY "PUBINESS" ORDER BY "PUBINESS" ASC;
 ```
-Then we'll use the new measure as part of the cost function for path finding with mode "pub".
+![](images/PUBINESS_DISTR.png)
+
+Now, we can use the new measure as part of the cost function for path finding with mode "pub".
 
 `Shortest_Path(:g, :v_start, :v_end, (Edge e) => DOUBLE {`<br>`
 RETURN :e."length"/(5.0*:e."PUBINESS"+1.0); `<br>`
@@ -103,11 +115,13 @@ IF(:e."highway" == 'cycleway') { RETURN :e."length"/10.0; }`<br>`
 ELSE { RETURN :e."length"; } `<br>`
 }, :i_direction);`
 
+Create a `TABLE TYPE` first.
 ```SQL
 CREATE TYPE "DAT260"."TT_SPOO_MULTI_MODE" AS TABLE (
 		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SPEED_MPH" INT, "highway" NVARCHAR(5000)
 );
 ```
+Then the procedure.
 ```SQL
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_MULTI_MODE"(
 	IN i_startVertex BIGINT, 		-- the ID of the start vertex
@@ -145,12 +159,12 @@ LANGUAGE GRAPH READS SQL DATA AS BEGIN
 END;
 ```
 ```SQL
-CALL "DAT260"."GS_SPOO_MULTI_MODE"(14680080, 7251951621, 'ANY', 'pub', ?, ?, ?);
-CALL "DAT260"."GS_SPOO_MULTI_MODE"(14680080, 7251951621, 'ANY', 'bike', ?, ?, ?);
+CALL "DAT260"."GS_SPOO_MULTI_MODE"(1433737988, 1794145673, 'ANY', 'pub', ?, ?, ?);
+CALL "DAT260"."GS_SPOO_MULTI_MODE"(1433737988, 1794145673, 'ANY', 'bike', ?, ?, ?);
 ```
 ## Exercise 8.4 Wrapping a Procedure in a Table Function <a name="subex4"></a>
 
-The procedure above returns more than one output - the path's length, weight, and a table with the edges. Sometimes it is convenient to wrap a GRAPH procedure in a table function, returning only a table output. Table functions are called via SELECT and this is a convenient way to post-process graph result - simply use the full power of SQL on your result set.
+The procedure above returns more than one output - the path's length, weight, and a table with the edges. Sometimes it is convenient to wrap a GRAPH procedure in a table function, returning only the tabular output. Table functions are called via SELECT and are a convenient way to post-process graph results - you can use the full power of SQL on your graph results. This is how you do it.
 
 ```SQL
 CREATE TYPE "DAT260"."TT_EDGES_SPOO_F" AS TABLE (
@@ -159,8 +173,8 @@ CREATE TYPE "DAT260"."TT_EDGES_SPOO_F" AS TABLE (
 ```
 ```SQL
 CREATE OR REPLACE FUNCTION "DAT260"."F_SPOO_EDGES"(
-	IN i_startVertex BIGINT, 		-- the ID of the start vertex
-	IN i_endVertex BIGINT, 			-- the ID of the end vertex
+	IN i_startVertex BIGINT,
+	IN i_endVertex BIGINT,
 	IN i_direction NVARCHAR(10),
 	IN i_mode NVARCHAR(10)
 	)
@@ -169,23 +183,24 @@ LANGUAGE SQLSCRIPT READS SQL DATA AS
 BEGIN
 	DECLARE o_path_length DOUBLE;
 	DECLARE o_path_weight DOUBLE;
-    CALL "DAT260"."GS_SPOO_MULTI_MODE"(:i_startVertex, :i_endVertex, :i_direction, :i_mode, o_path_length, o_path_weight, o_edges);
-    RETURN SELECT lbe.* FROM :o_edges AS P LEFT JOIN "DAT260"."LONDON_EDGES" lbe ON P."ID" = lbe."ID";
+  CALL "DAT260"."GS_SPOO_MULTI_MODE"(:i_startVertex, :i_endVertex, :i_direction, :i_mode, o_path_length, o_path_weight, o_edges);
+  RETURN SELECT lbe.* FROM :o_edges AS P LEFT JOIN "DAT260"."LONDON_EDGES" lbe ON P."ID" = lbe."ID";
 END;
 ```
 
-Now we can simply sum up the PUBINESS of a path, or UNION two paths to compare.
+Now we can simply calculate the average PUBINESS of a path (whatever this means), or UNION two paths to compare.
 
 ```SQL
-SELECT SUM("PUBINESS")
-	FROM "DAT260"."F_SPOO_EDGES"(1794145673, 1762951510, 'ANY', 'pub');
+SELECT AVG("PUBINESS")
+	FROM "DAT260"."F_SPOO_EDGES"(1433737988, 1794145673, 'ANY', 'pub');
 
 -- Compare two paths
-SELECT "ID", "SHAPE" FROM "DAT260"."F_SPOO_EDGES"(1794145673, 1762951510, 'ANY', 'pub')
+SELECT "ID", "SHAPE" FROM "DAT260"."F_SPOO_EDGES"(1433737988, 1794145673, 'ANY', 'pub')
 UNION
-SELECT "ID", "SHAPE" FROM "DAT260"."F_SPOO_EDGES"(1794145673, 1762951510, 'ANY', 'bike');
+SELECT "ID", "SHAPE" FROM "DAT260"."F_SPOO_EDGES"(1433737988, 1794145673, 'ANY', 'bike');
 ```
-TODO: pic
+![](images/TWO_PATHS.png)
+
 ## Summary
 
 We have used two more cost functions for path finding. We have wrapped the database procedure into a table function which can be called in a SQL SELECT statement. This is a nice way of mixing graph and relational processing.
