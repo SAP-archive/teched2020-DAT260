@@ -47,9 +47,13 @@ BEGIN
 END;
 ```
 ```SQL
-CALL "DAT260"."GS_SPOA"(124, ?);
+SELECT * FROM DAT260.LONDON_TUBE_STATIONS WHERE "name" = 'Heathrow Terminals 1, 2 & 3';
+CALL "DAT260"."GS_SPOA"(117, ?);
 ```
-TODO: add image
+If we start at Heathrow" and color-code the travel time it looks like this.
+
+![](images/ISO_Heathrow.png)
+
 
 ## Exercise 9.3 Using TRAVERSE BFS to implement Closeness Centrality <a name="subex3"></a>
 
@@ -107,7 +111,7 @@ BEGIN
 END;
 ```
 ```SQL
-CALL "DAT260"."GS_CC_SINGLE_SOURCE"(124, ?);
+CALL "DAT260"."GS_CC_SINGLE_SOURCE"(117, ?);
 ```
 
 Now the closeness centrality measures for a single vertex in a network is not really meaningful. We need to calculate the centrality for all vertices. We could do this by adding a loop into or GRAPH program. A nice way to implement such loops in a parallel way is by using the MAP_MERGE operator in SQLScript.
@@ -143,7 +147,8 @@ SELECT *
   ON C."ID" = S."ID"
 	ORDER BY "NORMALIZED_CLOSENESS_CENTRALITY" DESC;
 ```
-TODO: add image
+![](images/CC.png)
+
 ## Summary
 
 You've now seen how to use Shortest_Path_One_To_All and TRAVERSE BFS.
