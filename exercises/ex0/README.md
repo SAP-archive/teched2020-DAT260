@@ -10,6 +10,11 @@ Planned content:
     * data source
     * how data has been prepared (e.g. osmnx)
     * goals (detailed; high-level also on intro site)
+* Spatial Visualization
+    * DBeaver
+    * Wicket with st_transform and st_aswkt
+    * ST_AsSVG
+* General structure of exercises
 * For more background: Devtoberfest on Youtube
 
 # Level 1 Heading

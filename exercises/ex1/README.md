@@ -7,7 +7,7 @@ We can view latitude and longitude as double values by selecting [`ST_X()`](http
 SELECT 
 	"geometry_GEO".ST_X() AS LONGITUDE, 
 	"geometry_GEO".ST_Y() AS LATITUDE 
-FROM LONDON_BIKE_VERTICES;
+FROM LONDON_VERTICES;
 ```
 
 Geometries can represented in different [Spatial Reference Systems (SRS)](https://en.wikipedia.org/wiki/Spatial_reference_system). The given latitude and longitude values are based on a round-earth model and the corresponding spatial reference system is [WGS84 (id 4326)](https://de.wikipedia.org/wiki/World_Geodetic_System_1984).
@@ -70,8 +70,8 @@ UPDATE LONDON_POI SET SHAPE = "geometry_GEO".ST_Transform(32630);
 UPDATE LONDON_EDGES SET SHAPE = "geometry_GEO".ST_Transform(32630);
 UPDATE LONDON_VERTICES SET SHAPE = "geometry_GEO".ST_Transform(32630);
 
-UPDATE LONDON_TUBE_CONNECTIONS SET SHAPE = "geometry_GEO".ST_Transform(32630);
-UPDATE LONDON_TUBE_STATIONS SET SHAPE = "geometry_GEO".ST_Transform(32630);
+UPDATE LONDON_TUBE_CONNECTIONS SET SHAPE = SHAPE_4326.ST_Transform(32630);
+UPDATE LONDON_TUBE_STATIONS SET SHAPE = SHAPE_4326.ST_Transform(32630);
 ```
 
 ## Summary

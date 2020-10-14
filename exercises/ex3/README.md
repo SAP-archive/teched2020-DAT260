@@ -103,8 +103,6 @@ We can confirm that we properly selected the nodes by visualizing the result set
 SELECT SHAPE FROM LONDON_VERTICES WHERE IN_SCOPE = 1
 ```
 
-In the North and East we see a rectangular shape, which is originated in the fact, that the bounding box for our node data is smaller than the circle, that we have identified for transportation.
-
 ![](images/relevant_nodes.png)
 
 ## Summary
