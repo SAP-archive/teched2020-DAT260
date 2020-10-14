@@ -15,10 +15,11 @@ The requirements to follow the exercises in this repository are...
 ## Exercises
 
 - [Getting Started](exercises/ex0/)
-    - [Technical Setup](exercises/ex0#subex1)
-    - [Demo Scenario](exercises/ex0#subex2)
-    - [Technical Background](exercises/ex0#subex3)
-    - [Explore Data](exercises/ex0#subex4)
+    - [Setup SAP HANA Cloud Trial Instance](exercises/ex0#subex1)
+    - [Base Data & Demo Scenario](exercises/ex0#subex2)
+    - [Spatial Visualizations](exercises/ex0#subex3)
+    - [General Structure of Exercises](exercises/ex0#subex4)
+    - [Background Material](exercises/ex0#subex5)
 - [Exercise 1 - Add Planar Geometries Based on WGS84 Geometries](exercises/ex1/)
     - [Exercise 1.1 - Create Planar Spatial Reference System](exercises/ex1#subex1)
     - [Exercise 1.2 - Add Column with Type ST_Geometry](exercises/ex1#subex2)
