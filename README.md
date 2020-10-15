@@ -6,11 +6,12 @@ This repository contains the material for the SAP TechEd 2020 session called DAT
 
 ## Overview
 
-This session introduces attendees to...
+This session introduces attendees to the processing of spatial and network data. We use data from OpenStreetMap throughout the exercises. This includes street network and point of interest (POI) data from the London area. The data was downloaded using the [osmnx](https://github.com/gboeing/osmnx) python package and imported into HANA using the [Python Machine Learning Client for SAP HANA](https://pypi.org/project/hana-ml/). In unit 1-5 you will primarily work with the geometries of the dataset. This includes the handling of spatial data in HANA tables, distance calculation, and a spatial way to "snap" POIs to the street network. In unit 6-9 we will use HANA's graph capabilities to find different paths on this network, generate isochrones, and calculate a simple centrality measure.
 
 ## Requirements
 
-The requirements to follow the exercises in this repository are...
+To follow the exercises in this repository, a basic understanding of SQL is pretty helpful. In order to get the most out of the content, we advise to take some time to "read" and understand the SQL statements and procedures. Some of the concept explained can be re-used in many different scenarios.
+You also need to set up your own environment to run the exercises. This includes a SAP HANA Cloud system and optionally DBeaver (an open source database tool). No worries, the effort is really limited. Make sure to follow the instructions in the [Geeting Started](ex0/README.md) chapter.
 
 ## Exercises
 
