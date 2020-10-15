@@ -1,8 +1,8 @@
-# DAT260 - Multimodel Data Processing: SAP HANA Cloud and SAP HANA
+# DAT260 - Multimodel Data Processing with SAP HANA Cloud
 
 ## Description
 
-This repository contains the material for the SAP TechEd 2020 session called DAT260 - Multimodel Data Processing: SAP HANA Cloud and SAP HANA.
+This repository contains the material for the SAP TechEd 2020 session called DAT260 - Multimodel Data Processing with SAP HANA Cloud.
 
 ## Overview
 
