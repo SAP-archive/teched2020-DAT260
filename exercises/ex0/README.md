@@ -19,8 +19,12 @@ After registering for the SAP HANA Cloud trial, here's how to access your SAP HA
   4. Under Spaces, click on the "dev" space.
 
   5. Click on "SAP HANA Cloud" in the left navigation menu. 
+  
+  6. Now you can create an SAP HANA Cloud trial instance with the button on the top right. Find more details on how to do so [here](https://help.sap.com/viewer/db19c7071e5f4101837e23f06e576495/2020_03_QRC/en-US/784a1dbb421a4da29fb1e3bdf5f198ec.html).
 
 You're now in the SAP HANA Cloud trial! 
+As soon as the database instance is created and running, open the Database Explorer.
+
 
 
 - graph and spatial is there
