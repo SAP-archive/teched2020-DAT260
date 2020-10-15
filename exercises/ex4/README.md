@@ -15,7 +15,7 @@ SELECT le.*
 FROM LONDON_EDGES le 
 JOIN LONDON_VERTICES u ON le.SOURCE = u."osmid" 
 JOIN LONDON_VERTICES v ON le.TARGET = v."osmid" 
-WHERE u.IN_SCOPE = 1 AND v.IN_SCOPE = 1 AND "highway" = 'cycleway'
+WHERE u.IN_SCOPE = 1 AND v.IN_SCOPE = 1 AND le."highway" = 'cycleway'
 ```
 
 ## Exercise 4.2 - Create a Scalable Vector Graphic (SVG) to Visualize Cycleways <a name="subex2"></a>
@@ -38,7 +38,7 @@ SELECT ST_UnionAggr(le.SHAPE).ST_AsSVG(Attribute=>'stroke="red" stroke-width="0.
 FROM LONDON_EDGES le 
 JOIN LONDON_VERTICES u ON le.SOURCE = u."osmid" 
 JOIN LONDON_VERTICES v ON le.TARGET = v."osmid" 
-WHERE u.IN_SCOPE = 1 AND v.IN_SCOPE = 1 AND le."highway" = 'cycleway'
+WHERE u.IN_SCOPE = 1 AND v.IN_SCOPE = 1 AND le."highway" = 'cycleway';
 ```
 
 To view the SVG, simply copy&paste the output into a file and give it a name with ending '.svg'. You can view the SVG file by opening it with your browser.
@@ -57,7 +57,7 @@ Finding bicycle repair stations is easy, since the field `amenity` carries the v
 ```sql
 SELECT *
 FROM LONDON_POI
-WHERE "amenity" = 'bicycle_repair_station'
+WHERE "amenity" = 'bicycle_repair_station';
 ```
 
 The [Voronoi cell](https://en.wikipedia.org/wiki/Voronoi_diagram) (also known as Thiessen polygon) of a POI covers the area that is close to this POI than to any other POI in the list. The spatial windows function [`ST_VoronoiCell`](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/901a780341dc41c5b4c2e8c58975d2af.html) lets you create Voronoi cells on the database level.
@@ -68,7 +68,7 @@ SELECT
     SHAPE,
 	ST_VoronoiCell(SHAPE, 10.0) OVER () AS CATCHMENT_AREA
 FROM LONDON_POI 
-WHERE "amenity" LIKE 'bicycle_repair_station'
+WHERE "amenity" LIKE 'bicycle_repair_station';
 ```
 
 The Voronoi cells can be used to determine, which is the closest bicycle repair station to any location in the city.
