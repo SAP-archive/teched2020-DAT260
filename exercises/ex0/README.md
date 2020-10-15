@@ -3,7 +3,22 @@
 This section should get you started by going through all technical pre-requisites. Additionally you will be introduced to the dataset and some background information and material will be given.
 
 ## Setup SAP HANA Cloud Trial Instance <a name="subex1"></a>
-- create instance
+
+SAP HANA Cloud is a service on the SAP Cloud Platform. Here's how to access your SAP HANA Cloud trial:
+
+  1. Go to the [SAP Cloud Platform trial home](https://account.hanatrial.ondemand.com/register). This takes you to the SAP Cloud Platform Cockpit.
+
+  2. Click on the "Enter Your Trial Account" button. This takes you to the SAP Cloud Platform 
+
+  3. Click on the "trial" subaccount tile.
+
+  4. Under Spaces, click on the "dev" space.
+
+  5. Click on "SAP HANA Cloud" in the left navigation menu. 
+
+You're now in the SAP HANA Cloud trial and ready to begin!
+
+
 - graph and spatial is there
 - create user other than dbadmin and assign right for importing catalog objects
 ![](images/privilege_assignment.png)
