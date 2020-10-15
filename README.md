@@ -52,9 +52,8 @@ The requirements to follow the exercises in this repository are...
     - [Exercise 8.3 Finding Pubs and Bikelanes](exercises/ex8#subex3)
     - [Exercise 8.4 Wrapping a Procedure in a Table Function](exercises/ex8#subex4)
 - [Exercise 9 - Calculate Isochrones and Closeness Centrality](exercises/ex9/)
-    - [Exercise 9.1 Explore the Tube Data and Create a Graph workspace](exercises/ex9#subex1)
-    - [Exercise 9.2 Using Shortest_Path_One_To_All](exercises/ex9#subex2)
-    - [Exercise 9.3 Using TRAVERSE BFS to implement Closeness Centrality](exercises/ex9#subex3)
+    - [Exercise 9.1 Using Shortest_Path_One_To_All](exercises/ex9#subex1)
+    - [Exercise 9.2 Using TRAVERSE BFS to implement Closeness Centrality](exercises/ex9#subex2)
 
 ## How to obtain support
 

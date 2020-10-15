@@ -35,7 +35,9 @@ CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO"(
 	)
 LANGUAGE GRAPH READS SQL DATA AS BEGIN
 	-- Create an instance of the graph, referring to the graph workspace object
-	GRAPH g = Graph("DAT260", "BIKE_GRAPH");
+	GRAPH g_all = Graph("DAT260", "LONDON_GRAPH");
+  -- Using the IN_SCOPE attribute created in "Exercise 3 Identify Relevant Area for Transportation Network" to narrow down the search scope
+  GRAPH g = SubGraph(:g_all, v IN Vertices(:g_all) WHERE :v."IN_SCOPE" == 1);
 	-- Create an instance of the start/end vertex
 	VERTEX v_start = Vertex(:g, :i_startVertex);
 	VERTEX v_end = Vertex(:g, :i_endVertex);
@@ -45,12 +47,15 @@ LANGUAGE GRAPH READS SQL DATA AS BEGIN
 	o_edges = SELECT :e."ID", :e."SOURCE", :e."TARGET", :EDGE_ORDER, :e."length" FOREACH e IN Edges(:p) WITH ORDINALITY AS EDGE_ORDER;
 END;
 ```
+Note that we have used the "IN_SCOPE" attribute created in exercise 3 to focus on the relevant area. For this we "induced" a subgraph by filtering the complete LONDON_GRAPH g_all.
 
-The database procedure is executed like any other - using a CALL statement providing the input parameters. We'll find a path from ~Canary Wharf (1433737988) to Blues Kitchen (1794145673).
+The database procedure is executed like any other - using a CALL statement providing the input parameters. As we have snapped the POI data to nodes in the street network (exercise 5), we can now lookup the VERTEX_OSMID for our start and end POIs: Canary Wharf snaps to 1433737988, and Blues Kitchen to 1794145673.
 
 ```sql
+-- Look up VERTEX_OSMID of POI Blues kitchen
+SELECT VERTEX_OSMID FROM "DAT260"."LONDON_POI" WHERE "name" = 'Blues Kitchen' AND "osmid" = 6274057185;
 CALL "DAT260"."GS_SPOO"(i_startVertex => 1433737988, i_endVertex => 1794145673, i_direction => 'ANY', o_path_length => ?, o_edges => ?);
--- or in short 14680080, 7251951621
+-- or in short
 CALL "DAT260"."GS_SPOO"(1433737988, 1794145673, 'ANY', ?, ?);
 ```
 The result is a set of edges/street segments that make up the path. The `EDGE_ORDER` value identifies the sequence. The procedure also returns `O_PATH_LENGTH` = 464 which is the number of minimal hops it takes from Canary Wharf to Blues Kitchen.
@@ -63,7 +68,7 @@ Sometimes it is more convenient to generate and execute the GRAPH code dynamical
 ```sql
 DO ( OUT o_edges "DAT260"."TT_SPOO_EDGES" => ? ) LANGUAGE GRAPH
 BEGIN
-	GRAPH g = Graph("DAT260", "BIKE_GRAPH");
+	GRAPH g = Graph("DAT260", "LONDON_GRAPH");
 	VERTEX v_start = Vertex(:g, 14680080L);
 	VERTEX v_end = Vertex(:g, 7251951621L);
 	WeightedPath<BIGINT> p = Shortest_Path(:g, :v_start, :v_end, 'ANY');

@@ -46,7 +46,7 @@ CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_WEIGHTED"(
 	)
 LANGUAGE GRAPH READS SQL DATA AS BEGIN
 	-- Create an instance of the graph, referring to the graph workspace object
-	GRAPH g = Graph("DAT260", "BIKE_GRAPH");
+	GRAPH g = Graph("DAT260", "LONDON_GRAPH");
 	-- Create an instance of the start/end vertex
 	VERTEX v_start = Vertex(:g, :i_startVertex);
 	VERTEX v_end = Vertex(:g, :i_endVertex);
@@ -133,7 +133,7 @@ CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_MULTI_MODE"(
 	OUT o_edges "DAT260"."TT_SPOO_MULTI_MODE"
 	)
 LANGUAGE GRAPH READS SQL DATA AS BEGIN
-	GRAPH g = Graph("DAT260", "BIKE_GRAPH");
+	GRAPH g = Graph("DAT260", "LONDON_GRAPH");
 	VERTEX v_start = Vertex(:g, :i_startVertex);
 	VERTEX v_end = Vertex(:g, :i_endVertex);
 	-- mode=bike means cycleway preferred
@@ -168,7 +168,7 @@ The procedure above returns more than one output - the path's length, weight, an
 
 ```SQL
 CREATE TYPE "DAT260"."TT_EDGES_SPOO_F" AS TABLE (
-		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SHAPE" ST_GEOMETRY
+		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SHAPE" ST_GEOMETRY(32630)
 );
 ```
 ```SQL

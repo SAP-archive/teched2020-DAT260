@@ -25,7 +25,7 @@ ALTER TABLE "DAT260"."LONDON_EDGES" ALTER("TARGET" BIGINT NOT NULL REFERENCES "D
 ---
 The Graph Workspace exposes your data to the HANA graph engine. It is a kind of a "view" into your data. In our case, the Graph Workspace is defined directly on the tables. Note that you can also use SQL views, table functions, and remote tables as data sources. You can define multiple Graph Workspaces in one system.
 ```sql
-CREATE GRAPH WORKSPACE "DAT260"."BIKE_GRAPH"
+CREATE GRAPH WORKSPACE "DAT260"."LONDON_GRAPH"
 	EDGE TABLE "DAT260"."LONDON_EDGES"
 		SOURCE COLUMN "SOURCE"
 		TARGET COLUMN "TARGET"
