@@ -16,7 +16,7 @@ SAP HANA Cloud is a service on the SAP Cloud Platform. Here's how to access your
 
   5. Click on "SAP HANA Cloud" in the left navigation menu. 
 
-You're now in the SAP HANA Cloud trial and ready to begin!
+You're now in the SAP HANA Cloud trial! 
 
 
 - graph and spatial is there
@@ -27,7 +27,7 @@ You're now in the SAP HANA Cloud trial and ready to begin!
 ## Base Data & Demo Scenario <a name="subex2"></a>
 The data for the exercises is packaged as a HANA database export. The [export file](../data/DAT260.tar.gz) is in the data folder. Please download the file to your local computer.
 
-Once you downloaded the export file, you use the Database Explorer to connect to you HANA Cloud system. Right-click "Catalog" and choose "import catalog objects" to start the wizard.
+Once you downloaded the export file, you can use the Database Explorer to connect to your HANA Cloud system. Right-click "Catalog" and choose "import catalog objects" to start the wizard.
 
 ![](images/import_catalog_objects.png)
 - execute test script to see that spatial and graph is working
