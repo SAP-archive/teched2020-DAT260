@@ -1,7 +1,8 @@
 # Exercise 6 - Prepare data for the Graph Engine and create a Graph Workspace
 
-Our graph dataset describes the London street network. Formally, a graph consists of nodes/vertices and edges/links/connections. In our case, we have street segments stored in the `LONDON_EDGES` table, and intersections in the `LONDON_VERTIES` table.
-The HANA Graph engine requires a key on both tables, and the source and target columns of the edges table must not contain NULLs. To ensure the graph's consistency, it is also good practice to have a foreign key relationship defined on source and target column. Doing so will prevent "dangling edges", i.e. edges without vertices.
+Our graph dataset describes the London street network. Formally, a graph consists of nodes/vertices and edges/links/connections. In our case, we have street segments stored in the `LONDON_EDGES` table, and junctions in the `LONDON_VERTICES` table. The edges in the graph are "directed", they have a SOURCE and a TARGET. Most streets in the real world are bi-directional and so most of the segments are represented as two edges in the graph - one for each direction.
+
+The HANA Graph engine requires a key on both tables, and the source and target of the edges must not contain NULLs. To ensure the graph's consistency, it is also good practice to have a foreign key relationship defined on source and target column. Doing so will prevent "dangling edges", i.e. edges without vertices.
 Once your data is prepared, you expose it to the HANA Graph engine via a GRAPH WORKSPACE.
 
 ## Exercise 6.1 Define required Constraints on the Tables <a name="subex1"></a>
@@ -33,6 +34,11 @@ CREATE GRAPH WORKSPACE "DAT260"."LONDON_GRAPH"
 	VERTEX TABLE "DAT260"."LONDON_VERTICES"
 		KEY COLUMN "osmid";
 ```
+
+To get a glimpse of your network, you can right-click the LONDON_GRAPH workspace to launch the graph viewer.
+
+![](images/db_explorer.png)
+
 ## Summary
 
 We have defined constraints on our `LONDON_VERTICES` and `LONDON_EDGES` table and created a `GRAPH WORKSPACE`. We are all set up to run some graph stuff.

@@ -10,13 +10,16 @@ This section should get you started by going through all technical pre-requisite
 - access db explorer
 
 ## Base Data & Demo Scenario <a name="subex2"></a>
-- The data for the exercises is packaged as a HANA database export. The [export file](../data/DAT260.tar.gz) is in the data folder.
-- Once you downloaded the export file, you connect to you HANA Cloud system with the HANA Database Explorer. Right-click "Catalog" and choose "import catalog objects" to start the wizard.
+The data for the exercises is packaged as a HANA database export. The [export file](../data/DAT260.tar.gz) is in the data folder. Please download the file to your local computer.
+
+Once you downloaded the export file, you use the Database Explorer to connect to you HANA Cloud system. Right-click "Catalog" and choose "import catalog objects" to start the wizard.
 
 ![](images/import_catalog_objects.png)
 - execute test script to see that spatial and graph is working
-- description of data model and data source
-- how data has been prepared (e.g. osmnx)
+
+After import, you'll find 5 tables in the schema "DAT260". There is **LONDON_POI** which contains 90k points of interest in the London area. This includes pubs and bike repair shops. The street network data is in **LONDON_EDGES**, which represents the actual 1.5 million street segments, and **LONDON_VERTICES**, which describes the 800,000 road junctions. Finally, there are two tables containing data of the London Tube system - station and connections.
+
+The data was downloaded using the [osmnx](https://github.com/gboeing/osmnx) python package and imported into HANA using the [Python Machine Learning Client for SAP HANA](https://pypi.org/project/hana-ml/).
 
 ## Spatial Visualizations <a name="subex3"></a>
 - dbeaver
