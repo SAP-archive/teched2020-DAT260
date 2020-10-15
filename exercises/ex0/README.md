@@ -4,7 +4,11 @@ This section should get you started by going through all technical pre-requisite
 
 ## Setup SAP HANA Cloud Trial Instance <a name="subex1"></a>
 
-SAP HANA Cloud is a service on the SAP Cloud Platform. Here's how to access your SAP HANA Cloud trial:
+SAP HANA Cloud is a service on the SAP Cloud Platform.
+First of all, you need to register for the 30-days free trial of SAP HANA Cloud.
+To do so, click on this [link](https://www.sap.com/registration/trial.9a2d77fd-9c7a-48d7-b618-5b83ba9d0445.html) and follow the process.
+
+After registering for the SAP HANA Cloud trial, here's how to access your SAP HANA Cloud trial:
 
   1. Go to the [SAP Cloud Platform trial home](https://account.hanatrial.ondemand.com/register). This takes you to the SAP Cloud Platform Cockpit.
 
