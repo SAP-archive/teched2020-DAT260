@@ -1,6 +1,6 @@
 # Getting Started
 
-This section should get you started by going through all technical pre-requisites. Additionally you will be introduced to the dataset and some background information and material will be given
+This section should get you started by going through all technical pre-requisites. Additionally you will be introduced to the dataset and some background information and material will be given.
 
 ## Setup SAP HANA Cloud Trial Instance <a name="subex1"></a>
 - create instance
@@ -10,8 +10,10 @@ This section should get you started by going through all technical pre-requisite
 - access db explorer
 
 ## Base Data & Demo Scenario <a name="subex2"></a>
-- download data
-- upload data to trial instance
+- The data for the exercises is packaged as a HANA database export. The [export file](../data/DAT260.tar.gz) is in the data folder.
+- Once you downloaded the export file, you connect to you HANA Cloud system with the HANA Database Explorer. Right-click "Catalog" and choose "import catalog objects" to start the wizard.
+
+![](images/import_catalog_objects.png)
 - execute test script to see that spatial and graph is working
 - description of data model and data source
 - how data has been prepared (e.g. osmnx)
@@ -34,5 +36,5 @@ This section should get you started by going through all technical pre-requisite
 
 ## Summary
 You should now have an overview of the technical pre-requisites as well as the necessary background information to master the exercises of DAT260!
- 
+
 Continue to - [Exercise 1 - Add Planar Geometries Based on WGS84 Geometries](../ex1/README.md)
