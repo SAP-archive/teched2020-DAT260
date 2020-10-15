@@ -67,7 +67,7 @@ You should receive 4 records in the result set. If you do not have a visualizati
 ```sql
 SELECT "osmid", SHAPE.ST_Transform(4326).ST_AsWKT() 
 FROM LONDON_POI lp 
-WHERE LOWER("name") LIKE '%blues kitchen%' AND "amenity" = 'bar'
+WHERE LOWER("name") LIKE '%blues kitchen%' AND "amenity" = 'bar';
 ```
 
 When you copy over the geometries in WKT format to your online visualizer, you will see that two records are not located in Camden and the two other records are actually referring to the same location - one being a polygon depicting the outline of the building and the other being a point depicting the location of the building.
@@ -77,7 +77,7 @@ When you copy over the geometries in WKT format to your online visualizer, you w
 In the following we will work with the POI with OSM ID (field `osmid`) **6274057185**.
 
 ```sql
-SELECT * FROM LONDON_POI lp WHERE "osmid" = 6274057185
+SELECT * FROM LONDON_POI lp WHERE "osmid" = 6274057185;
 ```
 
 
@@ -94,7 +94,7 @@ SELECT SHAPE.ST_Distance(
         ST_GeomFromText('POINT (706327.107445 5710259.94449)', 32630)
     ) 
 FROM LONDON_POI lp 
-WHERE "osmid" = 6274057185
+WHERE "osmid" = 6274057185;
 ```
 
 Triggering the query above, we will come to the conclusion that the direct distance to reach our home made iced tea is around 8670 meter.

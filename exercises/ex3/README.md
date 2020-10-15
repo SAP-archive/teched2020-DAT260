@@ -35,7 +35,7 @@ SELECT CONN_LINE.ST_LineInterpolatePoint(0.5) AS CENTER_PT
 FROM 
 (
 	-- previous statement
-)
+);
 ```
 
 As a final step, we would like to draw a circle with radius `distance(start, target)/2 + 500` around `CENTER_PT`. The respective function, which takes the radius as an input, is called [`ST_Buffer`](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/010c53e227a94966bb009d52d9ec47a2.html).
@@ -44,7 +44,7 @@ SELECT CENTER_PT.ST_Buffer(4835) AS AREA
 FROM
 (
     -- previous statement
-)
+);
 ```
 
 The above steps can be combined into a single select using method chaining.
@@ -100,7 +100,7 @@ WHEN MATCHED THEN UPDATE SET lv.IN_SCOPE = CIRCLE.AREA.ST_Intersects(SHAPE);
 
 We can confirm that we properly selected the nodes by visualizing the result set of following query.
 ```sql
-SELECT SHAPE FROM LONDON_VERTICES WHERE IN_SCOPE = 1
+SELECT SHAPE FROM LONDON_VERTICES WHERE IN_SCOPE = 1;
 ```
 
 ![](images/relevant_nodes.png)

@@ -44,7 +44,7 @@ Continue with the next step, if there is one record in the result set.
 
 ---
 
-Before we can actually persist the geometry data with the now installed srs, we need to create a column for storing this data. We will enhance the existing tables by using the ][`ALTER TABLE`](https://help.sap.com/viewer/c1d3f60099654ecfb3fe36ac93c121bb/2020_03_QRC/en-US/20d329a6751910149d5fdbc4800f92ff.html) statement.
+Before we can actually persist the geometry data with the now installed srs, we need to create a column for storing this data. We will enhance the existing tables by using the [`ALTER TABLE`](https://help.sap.com/viewer/c1d3f60099654ecfb3fe36ac93c121bb/2020_03_QRC/en-US/20d329a6751910149d5fdbc4800f92ff.html) statement.
 
 ```sql
 ALTER TABLE LONDON_POI ADD (SHAPE ST_Geometry(32630));
