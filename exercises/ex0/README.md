@@ -27,7 +27,7 @@ As soon as the database instance is created and running, open the Database Explo
 
 To do so, click the "Open In" button and select "SAP HANA Database Explorer".
 
-(images/Database_Explorer.png)
+![](images/Database_Explorer.png)
 
 
 - graph and spatial is there
