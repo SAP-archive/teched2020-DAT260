@@ -23,17 +23,36 @@ After registering for the SAP HANA Cloud trial, here's how to access your SAP HA
   6. Now you can create an SAP HANA Cloud trial instance with the button on the top right. Find more details on how to do so [here](https://help.sap.com/viewer/db19c7071e5f4101837e23f06e576495/2020_03_QRC/en-US/784a1dbb421a4da29fb1e3bdf5f198ec.html). Bear in mind to remember your password.
 
 You're now in the SAP HANA Cloud trial! 
-As soon as the database instance is created and running, open the Database Explorer.
+As soon as the database instance is created and running, go to the SAP HANA Cockpit to create an additional user.
 
-To do so, click the "Open In" button and select "SAP HANA Database Explorer".
+To do so, click the "Open In" button and select "SAP HANA Cockpit".
+![](images/HANA_Cockpit.png)
+
+Within the SAP HANA Cockpit, select the "Security and User Management" View.
+![](images/select_view_cockpit.png)
+
+Select the "User Management" option on the right.
+![](images/user_management.png)
+
+Create a new user by clicking the "+" button.
+![](images/create_user.png)
+
+Provide a user name and select the password option. Bear in mind to remember the password.
+This user will later be used to connect to SAP HANA Cloud.
+Select "Save" on the bottom right.
+![](images/user_dialog.png)
+
+Go back to the Home page and select "Privilege Assignment" to assign the required privileges to the newly created user.
+![](images/privileges_mgmt.png)
+
+Select your newly created user and assign the privileges "CREATE SCHEMA" and "IMPORT" to the user.
+![](images/privilege_assignment.png)
+
+Great! You configured your SAP HANA Cloud instance to be ready to start with the exercises.
+Now, go back to SAP Cloud Platform and open the SAP HANA Database Explorer via "Open In".
 
 ![](images/Database_Explorer.png)
-
-
-- graph and spatial is there
-- create user other than dbadmin and assign right for importing catalog objects
-![](images/privilege_assignment.png)
-- access db explorer
+Now, you are ready to go with the exercises! Have fun!
 
 ## Base Data & Demo Scenario <a name="subex2"></a>
 The data for the exercises is packaged as a HANA database export. The [export file](../data/DAT260.tar.gz) is in the data folder. Please download the file to your local computer.
