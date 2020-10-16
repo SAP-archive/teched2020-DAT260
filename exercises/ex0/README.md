@@ -49,7 +49,7 @@ The data was downloaded using the [osmnx](https://github.com/gboeing/osmnx) pyth
 
 ## Spatial Visualizations <a name="subex3"></a>
 - dbeaver
-- wicket with st_transform and st_aswkt
+- wicket with st_transform and st_aswkt or geojson.io with st_asgeojson
 - st_assvg and browser (increase clob limit)
 
 ## General Structure of Exercises <a name="subex4"></a>
