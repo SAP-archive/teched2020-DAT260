@@ -60,7 +60,6 @@ The data for the exercises is packaged as a HANA database export. The [export fi
 Once you downloaded the export file, you can use the Database Explorer to connect to your HANA Cloud system. Right-click "Catalog" and choose "import catalog objects" to start the wizard.
 
 ![](images/import_catalog_objects.png)
-- execute test script to see that spatial and graph is working
 
 After import, you'll find 5 tables in the schema "DAT260". There is **LONDON_POI** which contains 90k points of interest in the London area. This includes pubs and bike repair shops. The street network data is in **LONDON_EDGES**, which represents the actual 1.5 million street segments, and **LONDON_VERTICES**, which describes the 800,000 road junctions. Finally, there are two tables containing data of the London Tube system - station and connections.
 
