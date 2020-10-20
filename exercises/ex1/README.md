@@ -40,11 +40,11 @@ Continue with the next step, if there is one record in the result set.
 
 ## Exercise 1.2 - Add Column with Type ST_Geometry <a name="subex2"></a>
 ---
-**Add a column named `SHAPE` of type `ST_Geometry`, that is able to hold geometries with srs 32630.**
+**Add a column named `SHAPE` of type `ST_Geometry`, that is able to hold geometries with SRS 32630.**
 
 ---
 
-Before we can actually persist the geometry data with the now installed srs, we need to create a column for storing this data. We will enhance the existing tables by using the [`ALTER TABLE`](https://help.sap.com/viewer/c1d3f60099654ecfb3fe36ac93c121bb/2020_03_QRC/en-US/20d329a6751910149d5fdbc4800f92ff.html) statement.
+Before we can actually persist the geometry data with the now installed SRS, we need to create a column for storing this data. We will enhance the existing tables by using the [`ALTER TABLE`](https://help.sap.com/viewer/c1d3f60099654ecfb3fe36ac93c121bb/2020_03_QRC/en-US/20d329a6751910149d5fdbc4800f92ff.html) statement.
 
 ```sql
 ALTER TABLE LONDON_POI ADD (SHAPE ST_Geometry(32630));
@@ -58,11 +58,11 @@ ALTER TABLE LONDON_TUBE_STATIONS ADD (SHAPE ST_Geometry(32630));
 
 ## Exercise 1.3 - Persist Projected Geometries <a name="subex3"></a>
 ---
-**Fill column `SHAPE` with geometries in srs 32630 constructed out of the existing WGS84 geometries.**
+**Fill column `SHAPE` with geometries in SRS 32630 constructed out of the existing WGS84 geometries.**
 
 ---
 
-To transform geometries from one spatial reference system into another, function [`ST_Transform`](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/e2b1e876847a47de86140071ba487881.html) can be used. To transform the existing geometries to srs 32630 and persist the result in column `SHAPE` the following statements need to be issued.
+To transform geometries from one spatial reference system into another, function [`ST_Transform`](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/e2b1e876847a47de86140071ba487881.html) can be used. To transform the existing geometries to SRS 32630 and persist the result in column `SHAPE` the following statements need to be issued.
 
 ```sql
 UPDATE LONDON_POI SET SHAPE = "geometry_GEO".ST_Transform(32630);
