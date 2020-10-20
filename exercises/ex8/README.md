@@ -1,6 +1,6 @@
 # Exercise 8 - Calculate Shortest Paths with a more complex cost function
 
-In the previous exercise we have use hop distance to calculate a shortest path. Now we will use a more meaningful cost function - we will take the time it takes to traverse a street segment. The EDGES table contains a "length" and "maxspeed" column. "maxspeed" is a string column with values like '30 mph'. We will create a new numeric column "SPEED_MPH" and extract the number part of "maxspeed" into this column. We will then re-write our procedure to take the expression "length"/"SPEED_MPH" as cost function.
+In the previous exercise we have use hop distance to calculate a shortest path. Now we will use a more meaningful cost function - we derive take the time it takes to traverse a street segment. The EDGES table contains a "length" and "maxspeed" column. "maxspeed" is a string column with values like '30 mph'. We will create a new numeric column "SPEED_MPH" and extract the number part of "maxspeed" into this column. We will then re-write our procedure to take the expression "length"/"SPEED_MPH" as cost function.
 
 ## Exercise 8.1 Generate a numeric column that contains the maximum speed allowed information <a name="subex1"></a>
 
@@ -25,7 +25,8 @@ This is the SPEED_MPH distribution after updating with default values.
 
 ## Exercise 8.2 Calculate Shortest Paths, minimizing the time it takes to get from start to end <a name="subex2"></a>
 
-Just like in the previous example, we define a table type and a procedure. This time, we are using "length"/SPEED_MPH" as cost function. Syntactically, the cost function is a lambda function like this:
+Just like in the previous example, we define a table type and a procedure. This time, we are using "length"/SPEED_MPH" as cost function. Syntactically, the cost function is a lambda function like this:&nbsp;
+
 `
 (Edge e) => DOUBLE{ return :e."length"/DOUBLE(:e."SPEED_MPH"); }
 `
@@ -78,7 +79,7 @@ If you bring this on a map it looks like this.
 Finding the fastest route is easy. Let's find two more interesting paths. First, we want find paths suitable for bikes. We can do so by boosting street segments which are "cycleways". Note that in most cases you cannot take cycleways only. The path algorithm will choose cycleways unless they are 10x longer than a normal road. For this logic we will use an `IF` statement within the cost function.
 Second, we would like to find "attractive" paths. We will calculate a new measure for the edges - "PUBINESS" - which is derived from the number of pubs nearby.
 
-First, let's calculate PUBINESS by counting pubs within 100m distance and ass this to our `LONDON_EDGES` table. We are using the spatial ST_WithinDistance predicate as join condition:<br>
+First, let's calculate PUBINESS by counting pubs within 100m distance and add this to our `LONDON_EDGES` table. We are using the spatial ST_WithinDistance predicate as join condition:<br>
 `ON pubs."SHAPE".ST_WithinDistance(e."EDGESHAPE", 100) = 1`
 
 ```SQL
