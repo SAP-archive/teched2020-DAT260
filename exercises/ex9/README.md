@@ -75,7 +75,7 @@ The HEXAGON result can be color-coded by the average CALCULATED_COST. On a map t
 
 ![](images/ISO2.png)
 
-Let's say we want to do business with a the cyclists in London. Our goal is to open a new bike repair shop. To find the right location for our shop, we could look at the existing repair stations and their reach. Maybe we find white spots on the map where there is not a lot of competition.<br>
+Let's say we want to do business with cyclists in London. Our goal is to open a new bike repair shop. To find the right location for our shop, we could look at the existing repair stations and their reach. Maybe we find white spots on the map where there is not a lot of competition.<br>
 So let's calculate 3 min drive time areas around all the bike repair shops in London. We'll use the MAP_MERGE operation to digest multiple POIs.
 
 ```sql
