@@ -1,10 +1,10 @@
 # Exercise 3 - Identify Relevant Area for Transportation Network
 
-Now, that we have identified the direct distance from our location to the target, we would like to identify the area, that is relevant to get from start to target. Instead of finding the path while considerung the whole transportation network, we would like select a meaningful sub-network.
+Now, that we have identified the direct distance from our location to the target, we would like to identify the area, that is relevant to get from start to target. Instead of finding the path while considerung the whole transportation network, we would like to select a meaningful sub-network.
 
 ## Exercise 3.1 - Create Circle for Relevant Area <a name="subex1"></a>
 ---
-**Construct a circle to identify the relevant area for the transportation network. The circle should have a minimal size and should contain source and target with a buffer of 500 meter around it.**
+**Construct a circle to identify the relevant area for the transportation network. The circle should have a minimal size and should contain origin and destination with a buffer of 500 meter around it.**
 
 ---
 
