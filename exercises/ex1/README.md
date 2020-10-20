@@ -10,7 +10,7 @@ SELECT
 FROM LONDON_VERTICES;
 ```
 
-Geometries can represented in different [Spatial Reference Systems (SRS)](https://en.wikipedia.org/wiki/Spatial_reference_system). The given latitude and longitude values are based on a round-earth model and the corresponding spatial reference system is [WGS84 (id 4326)](https://de.wikipedia.org/wiki/World_Geodetic_System_1984).
+Geometries can be represented in different [Spatial Reference Systems (SRS)](https://en.wikipedia.org/wiki/Spatial_reference_system). The given latitude and longitude values are based on a round-earth model and the corresponding spatial reference system is [WGS84 (id 4326)](https://de.wikipedia.org/wiki/World_Geodetic_System_1984).
 
 For performance reasons, it is recommended to use a projected spatial reference system instead of a round-earth model. This way euclidean geometry can be used for spatial calculations, which is less expensive than calculations on the sphere. The second general recommendation when dealing with spatial data is to persist the base geometries. This way, in-database optimizations such a spatial indices can be leveraged.
 
@@ -22,15 +22,15 @@ Check out this brief [Youtube Video](https://www.youtube.com/watch?v=s48iAbBrYBI
 
 ---
 
-SAP HANA is already aware of more than 9000 spatial reference systems - including the spatial reference system defined by [EPSG](https://epsg.org/). A suitable projected spatial reference system for UK is the [srs with id 32630](http://epsg.io/32630).
+SAP HANA is already aware of more than 9000 spatial reference systems - including the spatial reference system defined by [EPSG](https://epsg.org/). A suitable projected spatial reference system for UK is the [SRS with id 32630](http://epsg.io/32630).
 
-Before, we can create our first column using this srs, we need to install it on SAP HANA. Installation has to be done only the first time we are using this srs. Since 32630 is part of EPSG and already known to HANA, we can issue our [creation statement](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/9ebcad604e8d4c43a802d08cfdbe8ab2.html) referencing only the id of the srs.
+Before, we can create our first column using this SRS, we need to install it on SAP HANA. Installation has to be done only the first time we are using this SRS. Since 32630 is part of EPSG and already known to HANA, we can issue our [creation statement](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/9ebcad604e8d4c43a802d08cfdbe8ab2.html) referencing only the id of the SRS.
 
 ```sql
 CREATE PREDEFINED SPATIAL REFERENCE SYSTEM IDENTIFIED BY 32630;
 ```
 
-A list of all installed srs can be found in table [`ST_SPATIAL_REFERENCE_SYSTEMS`](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/7a2ea357787c101488ecd1b725836f07.html). To confirm, that the above statement has installed SRS 32630, you can check the result set of following statement.
+A list of all installed SRS can be found in table [`ST_SPATIAL_REFERENCE_SYSTEMS`](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/7a2ea357787c101488ecd1b725836f07.html). To confirm, that the above statement has installed SRS 32630, you can check the result set of following statement.
 
 ```sql
 SELECT * FROM ST_SPATIAL_REFERENCE_SYSTEMS WHERE SRS_ID = 32630;
