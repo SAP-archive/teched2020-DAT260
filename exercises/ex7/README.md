@@ -6,7 +6,7 @@ Once you have a `GRAPH WORKSPACE` defined, you can run [openCypher](https://www.
 **Create a `TABLE TYPE` that describes the output table of the procedure, containing ID, SOURCE, TARGET, EDGE_ORDER (BIGINT), and length (DOUBLE)**
 
 ---
-If you are familiar with HANA database procedures using SQLScript, you already know how to handle table-like results. A clean way to do this is by defining and using `TABLE TYPES`. The same approach is valid for GRAPH procedures. Our TABLE TYPE `TT_SPOO_EDGES` describes the structure of the path result. It includes the ID of the edge and the ORDER in which the edges are traversed.
+If you are familiar with SAP HANA database procedures using SQLScript, you already know how to handle table-like results. A clean way to do this is by defining and using `TABLE TYPES`. The same approach is valid for GRAPH procedures. Our TABLE TYPE `TT_SPOO_EDGES` describes the structure of the path result. It includes the ID of the edge and the ORDER in which the edges are traversed.
 
 ```sql
 CREATE TYPE "DAT260"."TT_SPOO_EDGES" AS TABLE (
@@ -19,7 +19,7 @@ CREATE TYPE "DAT260"."TT_SPOO_EDGES" AS TABLE (
 **Create a GRAPH procedure, using the built-in Shortest_Path function.**
 
 ---
-The procedure below looks a similar to SQLScript procedures - the header describes input and output variables, followed by the actual code. The code below is a graph specific programming language called GRAPH. Instead of working with relational objects and operations like tables and SQL, GRAPH procedures operate on vertices and edges. The core of this procedure is the call of the built-in graph algorithm:
+The procedure below looks similar to a SQLScript procedure - the header describes input and output variables, followed by the actual code. The code below is a graph specific programming language called GRAPH. Instead of working with relational objects and operations like tables and SQL, GRAPH procedures operate on vertices and edges. The core of this procedure is the call of the built-in graph algorithm:
 
 `WeightedPath<BIGINT> p = Shortest_Path(:g, :v_start, :v_end, :i_direction);`
 
@@ -47,7 +47,7 @@ LANGUAGE GRAPH READS SQL DATA AS BEGIN
 	o_edges = SELECT :e."ID", :e."SOURCE", :e."TARGET", :EDGE_ORDER, :e."length" FOREACH e IN Edges(:p) WITH ORDINALITY AS EDGE_ORDER;
 END;
 ```
-Note that we have used the "IN_SCOPE" attribute created in exercise 3 to focus on the relevant area. For this we "induced" a subgraph by filtering the complete LONDON_GRAPH g_all.
+If you remember, we have used the "IN_SCOPE" attribute created in exercise 3 to focus on the relevant area. For this we "induced" a subgraph by filtering the complete LONDON_GRAPH g_all.
 
 The database procedure is executed like any other - using a CALL statement providing the input parameters. As we have snapped the POI data to nodes in the street network (exercise 5), we can now lookup the VERTEX_OSMID for our start and end POIs: Canary Wharf snaps to 1433737988, and Blues Kitchen to 1794145673.
 
