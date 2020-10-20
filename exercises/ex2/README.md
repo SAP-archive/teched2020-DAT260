@@ -28,7 +28,7 @@ SELECT ST_GeomFromText('POINT(-0.026859 51.505748)', 4326) FROM DUMMY;
 If you use an SQL editor with built-in spatial visualization, like [DBeaver](https://dbeaver.io/), you will be able to preview the location and double-check that it matches your previously selected location.
 ![](images/dbeaver_preview_location.png)
 
-To make the following exercises more convenient, it is a good idea to transform this point to the same spatial reference system as our OSM data (srs with id 32630). We can extract the Well-known Text representation by using function [`ST_AsWKT`](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/7a169dff787c1014a095b86992806f14.html).
+To make the following exercises more convenient, it is a good idea to transform this point to the same spatial reference system as our OSM data (SRS with id 32630). We can extract the Well-known Text representation by using function [`ST_AsWKT`](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/7a169dff787c1014a095b86992806f14.html).
 
 ```sql
 SELECT ST_GeomFromText('POINT(-0.026859 51.505748)', 4326)
