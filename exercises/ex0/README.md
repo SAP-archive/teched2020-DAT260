@@ -52,6 +52,7 @@ Great! You configured your SAP HANA Cloud instance to be ready to start with the
 Now, go back to SAP Cloud Platform and open the SAP HANA Database Explorer via "Open In".
 
 ![](images/Database_Explorer.png)
+Keep in mind to login with the newly created user.
 Now, you are ready to go with the exercises! Have fun!
 
 ## Base Data & Demo Scenario <a name="subex2"></a>
