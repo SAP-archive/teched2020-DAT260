@@ -72,15 +72,15 @@ The data was downloaded using the [osmnx](https://github.com/gboeing/osmnx) pyth
 - st_assvg and browser (increase clob limit)
 
 ## General Structure of Exercises <a name="subex4"></a>
-- exercise text and solution
-- 1-5 = spatial
-- 6-9 = graph
+The following nine exercises are design to give you insights into spatial and graph processing with SAP HANA Cloud. We will provide you with sample data to experiment with SAP PHANA Cloud and experience the advantages of the multi-model engine.
+While the first five exercises focus on SAP HANA Spatial, the last four exercises focus on SAP HANA Graph.
 
 ## Background Material <a name="subex5"></a>
-- devtoberfest
-- spatial reference
-- graph reference
-- blogs
+
+If you are interested in more information or seek for more guidance or demos, check out the resources below:
+[SAP HANA Spatial Reference Guide](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/)
+[SAP HANA Graph Reference Guide](https://help.sap.com/viewer/11afa2e60a5f4192a381df30f94863f9)
+[SAP HANA Multi-model @ Devtoberfest](https://www.youtube.com/playlist?list=PL6RpkC85SLQA8za7iX9FRzewU7Vs022dl)
 
 ## Summary
 You should now have an overview of the technical pre-requisites as well as the necessary background information to master the exercises of DAT260!
