@@ -1,6 +1,6 @@
 # Exercise 5 - Snap POIs to Nodes of Street Network
 
-In our dataset we have points of interest (table `LONDON_POI`) as well as nodes of the transportation network (table `LONDON_VERTICES`). Of course, there is a spatial relation between both (e.g. distance measured by `ST_Distance`). In this exercise, we would like to assign each POI to its closes node in the transportation network. You can think of assigning a `bar` to its closest street corner.
+In our dataset we have points of interest (table `LONDON_POI`) as well as nodes of the transportation network (table `LONDON_VERTICES`). Of course, there is a spatial relation between both (e.g. distance measured by `ST_Distance`). In this exercise, we would like to assign each POI to its closest node in the transportation network. You can think of assigning a `bar` to its closest street corner.
 
 This way, we will be able to later on calculate shortest paths between points of interest.
 
