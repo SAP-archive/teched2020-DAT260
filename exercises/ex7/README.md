@@ -9,7 +9,7 @@ Once you have a `GRAPH WORKSPACE` defined, you can run [openCypher](https://www.
 If you are familiar with SAP HANA database procedures using SQLScript, you already know how to handle table-like results. A clean way to do this is by defining and using `TABLE TYPES`. The same approach is valid for GRAPH procedures. Our TABLE TYPE `TT_SPOO_EDGES` describes the structure of the path result. It includes the ID of the edge and the ORDER in which the edges are traversed.
 
 ```sql
-CREATE TYPE "DAT260"."TT_SPOO_EDGES" AS TABLE (
+CREATE TYPE "TT_SPOO_EDGES" AS TABLE (
     "ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE)
 ;
 ```
@@ -26,12 +26,12 @@ The procedure below looks similar to a SQLScript procedure - the header describe
 where `g` is our graph, `v_start` and `v_end` are the start/end vertices of the path we are searching, and `i_direction` indicates the direction in which edges can be traversed (OUTGOING, INCOMING, or ANY). The result is assigned to a path object `p`.
 
 ```sql
-CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO"(
+CREATE OR REPLACE PROCEDURE "GS_SPOO"(
 	IN i_startVertex BIGINT,       -- INPUT: the ID of the start vertex
 	IN i_endVertex BIGINT,         -- INPUT: the ID of the end vertex
 	IN i_direction NVARCHAR(10),   -- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
 	OUT o_path_length BIGINT,      -- OUTPUT: the hop distance between start and end
-	OUT o_edges "DAT260"."TT_SPOO_EDGES" -- OUTPUT: a table containing the edges that make up a shortest path between start and end
+	OUT o_edges "TT_SPOO_EDGES" -- OUTPUT: a table containing the edges that make up a shortest path between start and end
 	)
 LANGUAGE GRAPH READS SQL DATA AS BEGIN
 	-- Create an instance of the graph, referring to the graph workspace object
@@ -53,10 +53,10 @@ The database procedure is executed like any other - using a CALL statement provi
 
 ```sql
 -- Look up VERTEX_OSMID of POI Blues kitchen
-SELECT VERTEX_OSMID FROM "DAT260"."LONDON_POI" WHERE "name" = 'Blues Kitchen' AND "osmid" = 6274057185;
-CALL "DAT260"."GS_SPOO"(i_startVertex => 1433737988, i_endVertex => 1794145673, i_direction => 'ANY', o_path_length => ?, o_edges => ?);
+SELECT VERTEX_OSMID FROM "LONDON_POI" WHERE "name" = 'Blues Kitchen' AND "osmid" = 6274057185;
+CALL "GS_SPOO"(i_startVertex => 1433737988, i_endVertex => 1794145673, i_direction => 'ANY', o_path_length => ?, o_edges => ?);
 -- or in short
-CALL "DAT260"."GS_SPOO"(1433737988, 1794145673, 'ANY', ?, ?);
+CALL "GS_SPOO"(1433737988, 1794145673, 'ANY', ?, ?);
 ```
 The result is a set of edges/street segments that make up the path. The `EDGE_ORDER` value identifies the sequence. The procedure also returns `O_PATH_LENGTH` = 464 which is the number of minimal hops it takes from Canary Wharf to Blues Kitchen.
 
@@ -66,9 +66,9 @@ The result is a set of edges/street segments that make up the path. The `EDGE_OR
 
 Sometimes it is more convenient to generate and execute the GRAPH code dynamically without creating a procedure in the database. This approach is called "anonymous blocks". The code below is basically the same as in the procedure above, but this time it is execute in a DO - BEGIN - END block.
 ```sql
-DO ( OUT o_edges "DAT260"."TT_SPOO_EDGES" => ? ) LANGUAGE GRAPH
+DO ( OUT o_edges "TT_SPOO_EDGES" => ? ) LANGUAGE GRAPH
 BEGIN
-	GRAPH g = Graph("DAT260", "LONDON_GRAPH");
+	GRAPH g = Graph("LONDON_GRAPH");
 	VERTEX v_start = Vertex(:g, 14680080L);
 	VERTEX v_end = Vertex(:g, 7251951621L);
 	WeightedPath<BIGINT> p = Shortest_Path(:g, :v_start, :v_end, 'ANY');

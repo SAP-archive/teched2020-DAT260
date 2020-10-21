@@ -13,12 +13,12 @@ The Shortest_Path_One_To_All is similar to the Shortest_Path we have seen in the
 `});`
 
 ```SQL
-CREATE TYPE "DAT260"."TT_SPOA_VERTICES" AS TABLE ("osmid" BIGINT, "CALCULATED_COST" DOUBLE);
+CREATE TYPE "TT_SPOA_VERTICES" AS TABLE ("osmid" BIGINT, "CALCULATED_COST" DOUBLE);
 
-CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOA"(
+CREATE OR REPLACE PROCEDURE "GS_SPOA"(
 	IN i_startVertex BIGINT, 		-- the key of the start vertex
 	IN i_max DOUBLE,				-- the maximum distance/cost
-	OUT o_vertices "DAT260"."TT_SPOA_VERTICES"
+	OUT o_vertices "TT_SPOA_VERTICES"
 	)
 LANGUAGE GRAPH READS SQL DATA AS
 BEGIN
@@ -34,13 +34,13 @@ BEGIN
 END;
 
 -- Where can we go in 300 seconds starting Canary Wharf
-CALL "DAT260"."GS_SPOA" (1433737988, 300, ?);
+CALL "GS_SPOA" (1433737988, 300, ?);
 ```
 
 In order to visualize the data, let's wrap it in a function and do some post-processing to our graph results. With resultType = `POINTS` the function will return the raw data, i.e. the individual street intersections that are reachable given a certain maximum of travel time. With resultType = `CONVEXHULL` the function will calculate a convex hull of the points and return a single shape. Finally, with resultType = `HEXAGON` a spatial clustering is applied and travel times are averaged for each cluster cell.
 
 ```sql
-CREATE OR REPLACE FUNCTION "DAT260"."F_SPOA_VERTICES"(
+CREATE OR REPLACE FUNCTION "F_SPOA_VERTICES"(
 	IN i_startVertex BIGINT, 		-- the key of the start vertex
 	IN i_max DOUBLE,				-- the maximum distance/cost
 	IN i_resultType NVARCHAR(20)	-- indicates if the result should be POINTS, CONVEXHULL, or HEXAGON
@@ -48,28 +48,28 @@ CREATE OR REPLACE FUNCTION "DAT260"."F_SPOA_VERTICES"(
     RETURNS TABLE("ID" BIGINT, "SHAPE" ST_GEOMETRY(32630), "CALCULATED_COST" DOUBLE)
 LANGUAGE SQLSCRIPT READS SQL DATA AS
 BEGIN
-    CALL "DAT260"."GS_SPOA"(:i_startVertex, :i_max, o_path_vertices);
+    CALL "GS_SPOA"(:i_startVertex, :i_max, o_path_vertices);
 	IF (:i_resultType = 'POINTS') THEN
 		RETURN SELECT pv."osmid" AS "ID", lv."SHAPE", pv."CALCULATED_COST"
 		FROM :o_path_vertices AS pv
-		LEFT JOIN "DAT260"."LONDON_VERTICES" lv ON pv."osmid" = lv."osmid";
+		LEFT JOIN "LONDON_VERTICES" lv ON pv."osmid" = lv."osmid";
 	ELSEIF (:i_resultType = 'CONVEXHULL') THEN
 		RETURN SELECT i_startVertex AS "ID", ST_CONVEXHULLAGGR("SHAPE") AS "SHAPE", :i_max AS "CALCULATED_COST" FROM (
 		SELECT pv."osmid", lv."SHAPE", pv."CALCULATED_COST"
 		FROM :o_path_vertices AS pv
-		LEFT JOIN "DAT260"."LONDON_VERTICES" lv ON pv."osmid" = lv."osmid");
+		LEFT JOIN "LONDON_VERTICES" lv ON pv."osmid" = lv."osmid");
 	ELSEIF (:i_resultType = 'HEXAGON') THEN
 		RETURN SELECT ST_CLUSTERID() AS "ID", ST_CLUSTERCELL() AS "SHAPE", CAST(AVG("CALCULATED_COST") AS DOUBLE) AS "CALCULATED_COST" FROM (
 		SELECT pv."osmid", lv."SHAPE", pv."CALCULATED_COST"
 		FROM :o_path_vertices AS pv
-		LEFT JOIN "DAT260"."LONDON_VERTICES" lv ON pv."osmid" = lv."osmid")
+		LEFT JOIN "LONDON_VERTICES" lv ON pv."osmid" = lv."osmid")
 		GROUP CLUSTER BY "SHAPE" USING HEXAGON X CELLS 50;
 	END IF;
 END;
 -- again, exploring from Canary Wharf
-SELECT * FROM "DAT260"."F_SPOA_VERTICES"(1433737988, 60, 'POINTS') ORDER BY "CALCULATED_COST" DESC;
-SELECT * FROM "DAT260"."F_SPOA_VERTICES"(1433737988, 60, 'CONVEXHULL') ORDER BY "CALCULATED_COST" DESC;
-SELECT * FROM "DAT260"."F_SPOA_VERTICES"(1433737988, 240, 'HEXAGON') ORDER BY "CALCULATED_COST" DESC;
+SELECT * FROM "F_SPOA_VERTICES"(1433737988, 60, 'POINTS') ORDER BY "CALCULATED_COST" DESC;
+SELECT * FROM "F_SPOA_VERTICES"(1433737988, 60, 'CONVEXHULL') ORDER BY "CALCULATED_COST" DESC;
+SELECT * FROM "F_SPOA_VERTICES"(1433737988, 240, 'HEXAGON') ORDER BY "CALCULATED_COST" DESC;
 ```
 The HEXAGON result can be color-coded by the average CALCULATED_COST. On a map this looks like below. Areas with the same color can be reached with the same drive time - so called isochrones.
 
@@ -79,16 +79,16 @@ Let's say we want to do business with cyclists in London. Our goal is to open a 
 So let's calculate 3 min drive time areas around all the bike repair shops in London. We'll use the MAP_MERGE operation to digest multiple POIs.
 
 ```sql
-CREATE OR REPLACE FUNCTION "DAT260"."F_SPOA_VERTICES_MULTI" (IN i_filter NVARCHAR(5000), IN i_max DOUBLE, IN i_resultType NVARCHAR(20))
+CREATE OR REPLACE FUNCTION "F_SPOA_VERTICES_MULTI" (IN i_filter NVARCHAR(5000), IN i_max DOUBLE, IN i_resultType NVARCHAR(20))
 	RETURNS TABLE("ID" BIGINT, "SHAPE" ST_GEOMETRY(32630), "CALCULATED_COST" DOUBLE)
 LANGUAGE SQLSCRIPT READS SQL DATA AS
 BEGIN
-	startPOIs = APPLY_FILTER("DAT260"."LONDON_POI", :i_filter);
-	res = MAP_MERGE(:startPOIs, "DAT260"."F_SPOA_VERTICES"(:startPOIs."VERTEX_OSMID", :i_max, :i_resultType));
+	startPOIs = APPLY_FILTER("LONDON_POI", :i_filter);
+	res = MAP_MERGE(:startPOIs, "F_SPOA_VERTICES"(:startPOIs."VERTEX_OSMID", :i_max, :i_resultType));
 	RETURN SELECT * FROM :res;
 END;
 
-SELECT * FROM "DAT260"."F_SPOA_VERTICES_MULTI"(' "amenity" = ''bicycle_repair_station'' ', 180, 'CONVEXHULL');
+SELECT * FROM "F_SPOA_VERTICES_MULTI"(' "amenity" = ''bicycle_repair_station'' ', 180, 'CONVEXHULL');
 ```
 The result is a set of CONVEXHULL polygons which indicate "good repair shop coverage".
 
@@ -102,15 +102,15 @@ For the next exercises we will use a different network, the London Tube network.
 
 
 ```SQL
-SELECT * FROM "DAT260"."LONDON_TUBE_STATIONS";
-SELECT * FROM "DAT260"."LONDON_TUBE_CONNECTIONS";
+SELECT * FROM "LONDON_TUBE_STATIONS";
+SELECT * FROM "LONDON_TUBE_CONNECTIONS";
 
-CREATE GRAPH WORKSPACE "DAT260"."TUBE_GRAPH"
-	EDGE TABLE "DAT260"."LONDON_TUBE_CONNECTIONS"
+CREATE GRAPH WORKSPACE "TUBE_GRAPH"
+	EDGE TABLE "LONDON_TUBE_CONNECTIONS"
 		SOURCE COLUMN "SOURCE"
 		TARGET COLUMN "TARGET"
 		KEY COLUMN "ID"
-	VERTEX TABLE "DAT260"."LONDON_TUBE_STATIONS"
+	VERTEX TABLE "LONDON_TUBE_STATIONS"
 		KEY COLUMN "ID";
 ```
 
@@ -124,14 +124,14 @@ ON VISIT VERTEX (Vertex v_visited, BIGINT lvl) {`<br>
 In the example below, we hook into the VISIT VERTEX event and calculate a count and a cost. These numbers are then used to derive multiple closeness centrality measures.
 
 ```SQL
-CREATE TYPE "DAT260"."TT_RESULT_CC" AS TABLE (
+CREATE TYPE "TT_RESULT_CC" AS TABLE (
     "ID" BIGINT, "CLOSENESS_CENTRALITY" DOUBLE, "NORMALIZED_CLOSENESS_CENTRALITY" DOUBLE, "HARMONIC_CENTRALITY" DOUBLE, "NORMALIZED_HARMONIC_CENTRALITY" DOUBLE
 );
 ```
 ```SQL
-CREATE OR REPLACE PROCEDURE "DAT260"."GS_CC_SINGLE_SOURCE"(
+CREATE OR REPLACE PROCEDURE "GS_CC_SINGLE_SOURCE"(
 	IN i_start BIGINT,
-	OUT o_vertices "DAT260"."TT_RESULT_CC"
+	OUT o_vertices "TT_RESULT_CC"
 	)
 LANGUAGE GRAPH READS SQL DATA AS
 BEGIN
@@ -168,39 +168,39 @@ BEGIN
 END;
 ```
 ```SQL
-CALL "DAT260"."GS_CC_SINGLE_SOURCE"(117, ?);
+CALL "GS_CC_SINGLE_SOURCE"(117, ?);
 ```
 
 Now the closeness centrality measures for a single vertex in a network is not really meaningful. We need to calculate the centrality for all vertices to find the most important one. We could do this by adding a loop into or GRAPH program. A nice way to implement such loops in a parallel way is by using the MAP_MERGE operator in SQLScript.
 For this, we need to wrap the procedure in a function like we did in exercise 8.4.
 ```SQL
-CREATE OR REPLACE FUNCTION "DAT260"."F_CC_SINGLE_SOURCE"(IN i_start BIGINT)
-    RETURNS "DAT260"."TT_RESULT_CC"
+CREATE OR REPLACE FUNCTION "F_CC_SINGLE_SOURCE"(IN i_start BIGINT)
+    RETURNS "TT_RESULT_CC"
 LANGUAGE SQLSCRIPT READS SQL DATA AS
 BEGIN
-    CALL "DAT260"."GS_CC_SINGLE_SOURCE"(:i_start, result);
+    CALL "GS_CC_SINGLE_SOURCE"(:i_start, result);
     RETURN :result;
 END;
 ```
 Next, we can invoke this function on a set input parameters in a parallel way.
 ```SQL
-CREATE OR REPLACE FUNCTION "DAT260"."F_CC_MAP_MERGE" ()
-	RETURNS "DAT260"."TT_RESULT_CC"
+CREATE OR REPLACE FUNCTION "F_CC_MAP_MERGE" ()
+	RETURNS "TT_RESULT_CC"
 LANGUAGE SQLSCRIPT READS SQL DATA AS
 BEGIN
-	startVertices = SELECT DISTINCT "ID" FROM "DAT260"."LONDON_TUBE_STATIONS";
-	result = MAP_MERGE(:startVertices, "DAT260"."F_CC_SINGLE_SOURCE"(:startVertices."ID"));
+	startVertices = SELECT DISTINCT "ID" FROM "LONDON_TUBE_STATIONS";
+	result = MAP_MERGE(:startVertices, "F_CC_SINGLE_SOURCE"(:startVertices."ID"));
 	RETURN :result;
 END;
 ```
 ```SQL
-SELECT * FROM "DAT260"."F_CC_MAP_MERGE"() ORDER BY "NORMALIZED_CLOSENESS_CENTRALITY" DESC;
+SELECT * FROM "F_CC_MAP_MERGE"() ORDER BY "NORMALIZED_CLOSENESS_CENTRALITY" DESC;
 ```
 Again, we can mix the results from a graph function with other SQL operations, like a JOIN.
 ```SQL
 SELECT *
-  FROM "DAT260"."F_CC_MAP_MERGE"() AS C
-	LEFT JOIN "DAT260"."LONDON_TUBE_STATIONS" AS S
+  FROM "F_CC_MAP_MERGE"() AS C
+	LEFT JOIN "LONDON_TUBE_STATIONS" AS S
   ON C."ID" = S."ID"
 	ORDER BY "NORMALIZED_CLOSENESS_CENTRALITY" DESC;
 ```

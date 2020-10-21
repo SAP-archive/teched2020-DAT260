@@ -10,13 +10,13 @@ In the previous exercise we have use hop distance to calculate a shortest path. 
 ---
 
 ```sql
-ALTER TABLE "DAT260"."LONDON_EDGES" ADD("SPEED_MPH" INT);
-UPDATE "DAT260"."LONDON_EDGES"
+ALTER TABLE "LONDON_EDGES" ADD("SPEED_MPH" INT);
+UPDATE "LONDON_EDGES"
 	SET "SPEED_MPH" = TO_INT(REPLACE("maxspeed", ' mph', ''))
 	WHERE REPLACE("maxspeed", ' mph', '') <> "maxspeed" ;
-SELECT "SPEED_MPH", COUNT(*) AS C FROM "DAT260"."LONDON_EDGES" GROUP BY "SPEED_MPH" ORDER BY C DESC;
+SELECT "SPEED_MPH", COUNT(*) AS C FROM "LONDON_EDGES" GROUP BY "SPEED_MPH" ORDER BY C DESC;
 -- let's add a default value on the segments that do not have a speed information
-UPDATE "DAT260"."LONDON_EDGES" SET "SPEED_MPH" = 30 WHERE "SPEED_MPH" IS NULL;
+UPDATE "LONDON_EDGES" SET "SPEED_MPH" = 30 WHERE "SPEED_MPH" IS NULL;
 ```
 
 This is the SPEED_MPH distribution after updating with default values.
@@ -32,18 +32,18 @@ Just like in the previous example, we define a table type and a procedure. This 
 `
 
 ```sql
-CREATE TYPE "DAT260"."TT_SPOO_WEIGHTED_EDGES" AS TABLE (
+CREATE TYPE "TT_SPOO_WEIGHTED_EDGES" AS TABLE (
     "ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SPEED_MPH" INT
 );
 ```
 ```sql
-CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_WEIGHTED"(
+CREATE OR REPLACE PROCEDURE "GS_SPOO_WEIGHTED"(
 	IN i_startVertex BIGINT, 		-- INPUT: the ID of the start vertex
 	IN i_endVertex BIGINT, 			-- INPUT: the ID of the end vertex
 	IN i_direction NVARCHAR(10), 	-- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
 	OUT o_path_length BIGINT,		-- OUTPUT: the hop distance between start and end
 	OUT o_path_weight DOUBLE,		-- OUTPUT: the path weight/cost
-	OUT o_edges "DAT260"."TT_SPOO_WEIGHTED_EDGES"  -- OUTPUT: the edges that make up the path
+	OUT o_edges "TT_SPOO_WEIGHTED_EDGES"  -- OUTPUT: the edges that make up the path
 	)
 LANGUAGE GRAPH READS SQL DATA AS BEGIN
 	-- Create an instance of the graph, referring to the graph workspace object
@@ -65,7 +65,7 @@ END;
 Call the procedure.
 
 ```sql
-CALL "DAT260"."GS_SPOO_WEIGHTED"(1433737988, 1794145673, 'ANY', ?, ?, ?);
+CALL "GS_SPOO_WEIGHTED"(1433737988, 1794145673, 'ANY', ?, ?, ?);
 ```
 
 ![](images/SPOO_WEIGHTED.png)
@@ -83,23 +83,23 @@ First, let's calculate PUBINESS by counting pubs within 100m distance and add th
 `ON pubs."SHAPE".ST_WithinDistance(e."EDGESHAPE", 100) = 1`
 
 ```SQL
-ALTER TABLE "DAT260"."LONDON_EDGES" ADD ("PUBINESS" DOUBLE DEFAULT 0);
+ALTER TABLE "LONDON_EDGES" ADD ("PUBINESS" DOUBLE DEFAULT 0);
 
-MERGE INTO "DAT260"."LONDON_EDGES"
+MERGE INTO "LONDON_EDGES"
 	USING (
 		SELECT e."ID", COUNT(*) AS "PUBINESS" FROM
-			(SELECT * FROM "DAT260"."LONDON_POI" WHERE "amenity" ='pub') AS pubs
+			(SELECT * FROM "LONDON_POI" WHERE "amenity" ='pub') AS pubs
 			LEFT JOIN
-			(SELECT "ID", "SHAPE" AS "EDGESHAPE" FROM "DAT260"."LONDON_EDGES") AS e
+			(SELECT "ID", "SHAPE" AS "EDGESHAPE" FROM "LONDON_EDGES") AS e
 			ON pubs."SHAPE".ST_WithinDistance(e."EDGESHAPE", 100) = 1
 			GROUP BY e."ID" ORDER BY "PUBINESS" DESC)	AS U
-	ON "DAT260"."LONDON_EDGES"."ID" = U."ID"
-WHEN MATCHED THEN UPDATE SET "DAT260"."LONDON_EDGES"."PUBINESS" = U."PUBINESS";
+	ON "LONDON_EDGES"."ID" = U."ID"
+WHEN MATCHED THEN UPDATE SET "LONDON_EDGES"."PUBINESS" = U."PUBINESS";
 ```
 Let's take a look at the distribution of our PUBINESS property.
 ```SQL
 
-SELECT "PUBINESS", COUNT(*) AS C FROM "DAT260"."LONDON_EDGES" GROUP BY "PUBINESS" ORDER BY "PUBINESS" ASC;
+SELECT "PUBINESS", COUNT(*) AS C FROM "LONDON_EDGES" GROUP BY "PUBINESS" ORDER BY "PUBINESS" ASC;
 ```
 ![](images/PUBINESS_DISTR.png)
 
@@ -118,20 +118,20 @@ ELSE { RETURN :e."length"; } `<br>`
 
 Create a `TABLE TYPE` first.
 ```SQL
-CREATE TYPE "DAT260"."TT_SPOO_MULTI_MODE" AS TABLE (
+CREATE TYPE "TT_SPOO_MULTI_MODE" AS TABLE (
 		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SPEED_MPH" INT, "highway" NVARCHAR(5000)
 );
 ```
 Then the procedure.
 ```SQL
-CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_MULTI_MODE"(
+CREATE OR REPLACE PROCEDURE "GS_SPOO_MULTI_MODE"(
 	IN i_startVertex BIGINT, 		-- the ID of the start vertex
 	IN i_endVertex BIGINT, 			-- the ID of the end vertex
 	IN i_direction NVARCHAR(10), 	-- the the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
 	IN i_mode NVARCHAR(10), 		-- hop, time, bike
 	OUT o_path_length BIGINT,		-- the hop distance between start and end
 	OUT o_path_weight DOUBLE,		-- the path weight/cost based on the WEIGHT attribute
-	OUT o_edges "DAT260"."TT_SPOO_MULTI_MODE"
+	OUT o_edges "TT_SPOO_MULTI_MODE"
 	)
 LANGUAGE GRAPH READS SQL DATA AS BEGIN
 	GRAPH g = Graph("DAT260", "LONDON_GRAPH");
@@ -160,32 +160,32 @@ LANGUAGE GRAPH READS SQL DATA AS BEGIN
 END;
 ```
 ```SQL
-CALL "DAT260"."GS_SPOO_MULTI_MODE"(1433737988, 1794145673, 'ANY', 'pub', ?, ?, ?);
-CALL "DAT260"."GS_SPOO_MULTI_MODE"(1433737988, 1794145673, 'ANY', 'bike', ?, ?, ?);
+CALL "GS_SPOO_MULTI_MODE"(1433737988, 1794145673, 'ANY', 'pub', ?, ?, ?);
+CALL "GS_SPOO_MULTI_MODE"(1433737988, 1794145673, 'ANY', 'bike', ?, ?, ?);
 ```
 ## Exercise 8.4 Wrapping a Procedure in a Table Function <a name="subex4"></a>
 
 The procedure above returns more than one output - the path's length, weight, and a table with the edges. Sometimes it is convenient to wrap a GRAPH procedure in a table function, returning only the tabular output. Table functions are called via SELECT and are a convenient way to post-process graph results - you can use the full power of SQL on your graph results. This is how you do it.
 
 ```SQL
-CREATE TYPE "DAT260"."TT_EDGES_SPOO_F" AS TABLE (
+CREATE TYPE "TT_EDGES_SPOO_F" AS TABLE (
 		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SHAPE" ST_GEOMETRY(32630)
 );
 ```
 ```SQL
-CREATE OR REPLACE FUNCTION "DAT260"."F_SPOO_EDGES"(
+CREATE OR REPLACE FUNCTION "F_SPOO_EDGES"(
 	IN i_startVertex BIGINT,
 	IN i_endVertex BIGINT,
 	IN i_direction NVARCHAR(10),
 	IN i_mode NVARCHAR(10)
 	)
-  RETURNS "DAT260"."LONDON_EDGES"
+  RETURNS "LONDON_EDGES"
 LANGUAGE SQLSCRIPT READS SQL DATA AS
 BEGIN
 	DECLARE o_path_length DOUBLE;
 	DECLARE o_path_weight DOUBLE;
-  CALL "DAT260"."GS_SPOO_MULTI_MODE"(:i_startVertex, :i_endVertex, :i_direction, :i_mode, o_path_length, o_path_weight, o_edges);
-  RETURN SELECT lbe.* FROM :o_edges AS P LEFT JOIN "DAT260"."LONDON_EDGES" lbe ON P."ID" = lbe."ID";
+  CALL "GS_SPOO_MULTI_MODE"(:i_startVertex, :i_endVertex, :i_direction, :i_mode, o_path_length, o_path_weight, o_edges);
+  RETURN SELECT lbe.* FROM :o_edges AS P LEFT JOIN "LONDON_EDGES" lbe ON P."ID" = lbe."ID";
 END;
 ```
 
@@ -193,12 +193,12 @@ Now we can simply calculate the average PUBINESS of a path (whatever this means)
 
 ```SQL
 SELECT AVG("PUBINESS")
-	FROM "DAT260"."F_SPOO_EDGES"(1433737988, 1794145673, 'ANY', 'pub');
+	FROM "F_SPOO_EDGES"(1433737988, 1794145673, 'ANY', 'pub');
 
 -- Compare two paths
-SELECT "ID", "SHAPE" FROM "DAT260"."F_SPOO_EDGES"(1433737988, 1794145673, 'ANY', 'pub')
+SELECT "ID", "SHAPE" FROM "F_SPOO_EDGES"(1433737988, 1794145673, 'ANY', 'pub')
 UNION
-SELECT "ID", "SHAPE" FROM "DAT260"."F_SPOO_EDGES"(1433737988, 1794145673, 'ANY', 'bike');
+SELECT "ID", "SHAPE" FROM "F_SPOO_EDGES"(1433737988, 1794145673, 'ANY', 'bike');
 ```
 ![](images/TWO_PATHS.png)
 
