@@ -68,9 +68,50 @@ After import, you'll find 5 tables in the schema `DAT260`. There is `LONDON_POI`
 The data was downloaded using the [osmnx](https://github.com/gboeing/osmnx) python package and imported into HANA using the [Python Machine Learning Client for SAP HANA](https://pypi.org/project/hana-ml/).
 
 ## Spatial Visualizations <a name="subex3"></a>
-- dbeaver
-- wicket with st_transform and st_aswkt or geojson.io with st_asgeojson
-- st_assvg and browser (increase clob limit)
+Especially when working with Spatial data it can be extremely valuable to actually visualize the results - ideally on a map. Without proper visualization, you will just receive geometries described by latitude/longitude pairs, which is hard to interprete.
+
+Depending on your local restrictions to install software, you can consider the following alternatives to visualize the results of a spatial query.
+
+As an example, let's try to visualize a simple point. We can generate a point by using a select on table ```DUMMY``` that calls the spatial function [```ST_GeomFromText```](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/7a194a8e787c1014bed49b5134e6b930.html).
+
+```sql
+SELECT ST_GeomFromText('POINT(8.642057 49.293432)', 4326) AS SHAPE FROM DUMMY;
+```
+
+### DBeaver.io - Open Source DB Client with built-in Spatial Visualizations
+DBeaver is an open source database client with support for SAP HANA. The free community edition can be downloaded on [dbeaver.io](https://dbeaver.io/download/).
+
+Refer to the following blog on how to set up the connection to your system.
+
+[Good Things Come Together: DBeaver, SAP HANA Spatial & Beer](https://blogs.sap.com/2020/01/08/good-things-come-together-dbeaver-sap-hana-spatial-beer/)
+
+The example query above will simply return the results while showing a map preview of the geometries.
+![](images/dbeaver_preview.png)
+
+### GeoJson.io - Online Service to Visualize GeoJSON
+If you have restrictions with installing local software, there are online services that you can use for visualization of geometries. An example is [GeoJson.io](http://geojson.io). This service can visualize geometries, that are represented as a GeoJSON with SRID ```4326```. You need to use function [```ST_Transform```](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/e2b1e876847a47de86140071ba487881.html) and function [```ST_AsGeoJson```](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/7a157dd1787c1014a5d8d88e3811bcc8.html) to generate this representation on SAP HANA.
+
+The example query above becomes
+```sql
+SELECT SHAPE.ST_Transform(4326).ST_AsGeoJson()
+FROM 
+(
+  -- example query
+  SELECT ST_GeomFromText('POINT(8.642057 49.293432)', 4326) AS SHAPE FROM DUMMY
+);
+```
+
+The resulting GeoJSON can be copy and pasted into the web form:
+```json
+{"type": "Point", "coordinates": [8.642057, 49.293432]}
+```
+
+![](images/geojson_io.png)
+
+### [ST_AsSVGAggr](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/b995aa41e2334478ba8351d6ecaa9467.html) - HANA Function to Generate a Scalable Vector Graphic
+In case that even internet access is restricted on you machine (how did you even read this exercise then?), you can use HANA's buil-in function to generate a scalable vector graphic, and then display it in your browser. With this approach, you will simply see the shapes of the geometries without any base map visualization.
+
+This, of course, is the least helpful visualization for exploring the data. Some details on how to do it nonetheless, will be given in [Exercise 4.2 - Create a Scalable Vector Graphic (SVG) to Visualize Cycleways](exercises/ex4#subex2).
 
 ## General Structure of Exercises <a name="subex4"></a>
 The following nine exercises are design to give you insights into spatial and graph processing with SAP HANA Cloud. We will provide you with sample data to experiment with SAP HANA Cloud and experience the advantages of the multi-model engine.
@@ -80,8 +121,11 @@ We recommend tackling the exercises one after another, starting from exercise 1.
 ## Background Material <a name="subex5"></a>
 
 If you are interested in more information or seek for more guidance or demos, check out the resources below:
+
 [SAP HANA Spatial Reference Guide](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/)
+
 [SAP HANA Graph Reference Guide](https://help.sap.com/viewer/11afa2e60a5f4192a381df30f94863f9)
+
 [SAP HANA Multi-model @ Devtoberfest](https://www.youtube.com/playlist?list=PL6RpkC85SLQA8za7iX9FRzewU7Vs022dl)
 
 ## Summary
