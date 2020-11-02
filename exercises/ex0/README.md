@@ -129,6 +129,11 @@ If you are interested in more information or seek for more guidance or demos, ch
 [SAP HANA Multi-model @ Devtoberfest](https://www.youtube.com/playlist?list=PL6RpkC85SLQA8za7iX9FRzewU7Vs022dl)
 
 ## Summary
-You should now have an overview of the technical pre-requisites as well as the necessary background information to master the exercises of DAT260!
+You should now have an overview of the technical pre-requisites as well as the necessary background information to master the exercises of DAT260! When starting with the exercises keep in mind that the data is residing in schema ```DAT260```. Make sure to set the context to this schema by executing:
+
+```sql
+SET SCHEMA DAT260;
+```
+
 
 Continue to - [Exercise 1 - Add Planar Geometries Based on WGS84 Geometries](../ex1/README.md)
