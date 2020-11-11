@@ -66,14 +66,18 @@ The result is a set of edges/street segments that make up the path. The `EDGE_OR
 
 Sometimes it is more convenient to generate and execute the GRAPH code dynamically without creating a procedure in the database. This approach is called "anonymous blocks". The code below is basically the same as in the procedure above, but this time it is execute in a DO - BEGIN - END block.
 ```sql
-DO ( OUT o_edges "TT_SPOO_EDGES" => ? ) LANGUAGE GRAPH
+DO (
+    IN i_startVertex BIGINT => 14680080, IN i_endVertex BIGINT => 7251951621,
+    OUT o_edges TABLE("ID" NVARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EGDE_ORDER" BIGINT, "length" DOUBLE) => ?
+) LANGUAGE GRAPH
 BEGIN
-	GRAPH g = Graph("LONDON_GRAPH");
-	VERTEX v_start = Vertex(:g, 14680080L);
-	VERTEX v_end = Vertex(:g, 7251951621L);
-	WeightedPath<BIGINT> p = Shortest_Path(:g, :v_start, :v_end, 'ANY');
-	o_edges = SELECT :e."ID", :e."SOURCE", :e."TARGET", :EDGE_ORDER, :e."length" FOREACH e IN Edges(:p) WITH ORDINALITY AS EDGE_ORDER;
+                GRAPH g = Graph("LONDON_GRAPH");
+                VERTEX v_start = Vertex(:g, :i_startVertex);
+                VERTEX v_end = Vertex(:g, :i_endVertex);
+                WeightedPath<BIGINT> p = Shortest_Path(:g, :v_start, :v_end, 'ANY');
+                o_edges = SELECT :e."ID", :e."SOURCE", :e."TARGET", :EDGE_ORDER, :e."length" FOREACH e IN Edges(:p) WITH ORDINALITY AS EDGE_ORDER;
 END;
+
 ```
 
 ## Summary
