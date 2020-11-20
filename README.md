@@ -10,7 +10,7 @@ This session introduces attendees to the processing of **spatial** and **network
 
 ## Requirements
 
-For the exercises in this repository, a basic understanding of SQL is pretty helpful. To get the most out of the content, we advise to take some time to "read" and understand the SQL statements and procedures - not just copy/past and execute ;-). Some of the concepts explained can be re-used in many different scenarios.
+For the exercises in this repository, a basic understanding of SQL is pretty helpful. To get the most out of the content, we advise to take some time to "read" and understand the SQL statements and procedures - not just copy/paste and execute ;-). Some of the concepts explained can be re-used in many different scenarios.
 In addition, you also need to set up your own environment to run the exercises. This includes a **SAP HANA Cloud** system and optionally DBeaver (an open source database tool). No worries, the effort is really limited. Make sure to follow the instructions in the [Geeting Started](ex0/README.md) chapter.
 
 ## Exercises
@@ -20,7 +20,8 @@ In addition, you also need to set up your own environment to run the exercises. 
     - [Base Data & Demo Scenario](exercises/ex0#subex2)
     - [Spatial Visualizations](exercises/ex0#subex3)
     - [General Structure of Exercises](exercises/ex0#subex4)
-    - [Background Material](exercises/ex0#subex5)
+    - [The underlying Data Set](exercises/ex0#subex5)
+    - [Background Material](exercises/ex0#subex6)
 - [Exercise 1 - Add Planar Geometries Based on WGS84 Geometries](exercises/ex1/)
     - [Exercise 1.1 - Create Planar Spatial Reference System](exercises/ex1#subex1)
     - [Exercise 1.2 - Add Column with Type ST_Geometry](exercises/ex1#subex2)

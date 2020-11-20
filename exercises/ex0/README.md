@@ -118,7 +118,48 @@ The following nine exercises are design to give you insights into spatial and gr
 While the first five exercises focus on SAP HANA Spatial, the last four exercises focus on SAP HANA Graph.
 We recommend tackling the exercises one after another, starting from exercise 1.
 
-## Background Material <a name="subex5"></a>
+## The underlying Data Set <a name="subex5"></a>
+The data set, that we will use as a base for our analysis, is an extract of [OpenStreetMap](https://www.openstreetmap.org/) data. The data covers the area of London and eventually consists out of three entities:
+1. **POI Data (Table ```LONDON_POI```)**
+    
+    Table ```LONDON_POI``` contains points of interest. Other than the naming suggests these POIs can be also be represented by polygon (e.g. the ground view of a house). There are different categories of POIs. A POI may be a park bench as well as a hospital or school. The field ```amenity``` can be used to filter the type of POI.
+
+    |Field              |Description
+    |------------------:|:----------
+    |```OSMID```        |The numerical OpenStreetMap ID
+    |```geometry_GEO``` |Geometrical shape (can be point or polygon) with SRS ```4326```
+    |```amenity```      |Type of POI (e.g. ```school```, ```bar```, ```post_office```, etc.)
+    |```name```         |Name for the POI
+    |```opening_hours```|Opening hours (e.g. ```null```, ```24/7``` or free text)
+    |```tags```         |JSON string with additional properties dependent on the available data
+
+2. **Edge Data (Table ```LONDON_EDGES```)**
+
+    Table ```LONDON_EDGES``` contains street (or path) segments. If you understand the streets and pathways as a network or graph, you may consider a street the edge of a graph. Intersections between streets would then be vertices (nodes) in this graph. 
+
+    |Field              |Description
+    |------------------:|:----------
+    |```OSMID```        |The numerical OpenStreetMap ID
+    |```geometry_GEO``` |Geometrical shape (can be point or polygon) with SRS ```4326```
+    |```SOURCE```       |Reference to the source vertex in table ```LONDON_VERTICES```
+    |```TARGET```       |Reference to the target vertex in table ```LONDON_VERTICES```
+    |```length```       |Length of the (street) segment in meter
+    |```name```         |Name of the segment (e.g. street name)
+    |```maxspeed```     |The maximum allowed speed
+    |```lanes```        |The number of street lanes
+    |```highway```      |Determines the type of road (e.g. ```road```, ```path```, ```cycleway```, etc.)
+
+3. **Vertex Data (Table ```LONDON_VERTICES```)**
+
+    Table ```LONDON_VERTICES``` contains all the vertices, that can be inferred from the street network in table ```LONDON_EDGES```. So each vertex is essentially a point where at least two street segments come together.
+
+    |Field              |Description
+    |------------------:|:----------
+    |```OSMID```        |The numerical OpenStreetMap ID
+    |```geometry_GEO``` |Geometrical point with SRS ```4326```
+    |```highway```      |Determines the type of 'junction' (e.g. ```crossing```, ```motorway_junction```, ```bus_stop```, etc.)
+    
+## Background Material <a name="subex6"></a>
 
 If you are interested in more information or seek for more guidance or demos, check out the resources below:
 
