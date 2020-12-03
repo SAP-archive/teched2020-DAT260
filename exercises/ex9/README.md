@@ -71,7 +71,7 @@ SELECT * FROM "F_SPOA_VERTICES"(1433737988, 60, 'POINTS') ORDER BY "CALCULATED_C
 SELECT * FROM "F_SPOA_VERTICES"(1433737988, 60, 'CONVEXHULL') ORDER BY "CALCULATED_COST" DESC;
 SELECT * FROM "F_SPOA_VERTICES"(1433737988, 240, 'HEXAGON') ORDER BY "CALCULATED_COST" DESC;
 ```
-The HEXAGON result can be color-coded by the average CALCULATED_COST. On a map this looks like below. Areas with the same color can be reached with the same drive time - so called isochrones.
+Using a GIS application like [Esri ArcGIS Pro](https://www.esri.com/en-us/arcgis/products/arcgis-pro/overview) or [QGIS](https://qgis.org/en/site/about/index.html), the HEXAGON result can be color-coded by the average CALCULATED_COST, resulting in a map visualization like below. Areas with the same color can be reached with the same drive time - so called isochrones.
 
 ![](images/ISO2.png)
 
@@ -204,7 +204,7 @@ SELECT *
   ON C."ID" = S."ID"
 	ORDER BY "NORMALIZED_CLOSENESS_CENTRALITY" DESC;
 ```
-The result shows vertices, i.e. tube stations, where the blue ones are most important/central to the network.
+Using a GIS application for advanced visualization, we see the tube stations, where the blue ones are most important/central to the network.
 
 ![](images/CC.png)
 
