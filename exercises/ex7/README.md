@@ -36,8 +36,8 @@ CREATE OR REPLACE PROCEDURE "GS_SPOO"(
 LANGUAGE GRAPH READS SQL DATA AS BEGIN
 	-- Create an instance of the graph, referring to the graph workspace object
 	GRAPH g_all = Graph("DAT260", "LONDON_GRAPH");
-  -- Using the IN_SCOPE attribute created in "Exercise 3 Identify Relevant Area for Transportation Network" to narrow down the search scope
-  GRAPH g = SubGraph(:g_all, v IN Vertices(:g_all) WHERE :v."IN_SCOPE" == 1);
+    -- Using the IN_SCOPE attribute created in "Exercise 3 Identify Relevant Area for Transportation Network" to narrow down the search scope
+    GRAPH g = SubGraph(:g_all, v IN Vertices(:g_all) WHERE :v."IN_SCOPE" == 1);
 	-- Create an instance of the start/end vertex
 	VERTEX v_start = Vertex(:g, :i_startVertex);
 	VERTEX v_end = Vertex(:g, :i_endVertex);
