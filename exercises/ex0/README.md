@@ -111,7 +111,7 @@ The resulting GeoJSON can be copy and pasted into the web form:
 ### [ST_AsSVGAggr](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/b995aa41e2334478ba8351d6ecaa9467.html) - HANA Function to Generate a Scalable Vector Graphic
 In case that even internet access is restricted on you machine (how did you even read this exercise then?), you can use HANA's buil-in function to generate a scalable vector graphic, and then display it in your browser. With this approach, you will simply see the shapes of the geometries without any base map visualization.
 
-This, of course, is the least helpful visualization for exploring the data. Some details on how to do it nonetheless, will be given in [Exercise 4.2 - Create a Scalable Vector Graphic (SVG) to Visualize Cycleways](exercises/ex4#subex2).
+This, of course, is the least helpful visualization for exploring the data. Some details on how to do it nonetheless, will be given in [Exercise 4.2 - Create a Scalable Vector Graphic (SVG) to Visualize Cycleways](../ex4#subex2).
 
 ## General Structure of Exercises <a name="subex4"></a>
 The following nine exercises are design to give you insights into spatial and graph processing with SAP HANA Cloud. We will provide you with sample data to experiment with SAP HANA Cloud and experience the advantages of the multi-model engine.
