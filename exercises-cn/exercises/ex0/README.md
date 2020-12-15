@@ -58,13 +58,13 @@ SAP HANA Cloud是SAP Cloud Platform上的一项服务。
 现在，您准备好进行练习了！ 玩得开心！**
 
 ## 基本数据和演示场景 <a name="subex2"></a>
-练习的数据打包为HANA数据库导出。 这个 [export file](../../../exercises/data/DAT260.tar.gz) 在data目录中. 请将文件下载到本地计算机。
+练习的数据打包为HANA数据库导出。 这个 [export file](../data/DAT260.tar.gz) 在data目录中. 请将文件下载到本地计算机。
 
 下载导出文件后, 您可以使用Database Explorer连接到您的HANA Cloud系统. 右单击"Catalog" 并且选择 "import catalog objects" 以开始这个向导.
 
 ![](images/import_catalog_objects.png)
 
-导入后, 您将发行在模式`DAT260`有5张表。 有张表`LONDON_POI`包含了9万个伦敦区域的兴趣点. 这包括酒吧和自行车维修店。 街道网络数据位于`LONDON_EDGES`和“`LONDON_VERTICES`中，`LONDON_EDGES`代表实际的150万条街道路段，`LONDON_VERTICES`描述80万个路口。 最后，有两个包含伦敦地铁系统数据的表-地铁站和连接。
+导入后, 您将发现在Schema`DAT260`下有5张表。 其中表`LONDON_POI`包含了9万个伦敦区域的兴趣点. 这包括酒吧和自行车维修店。 街道网络数据位于`LONDON_EDGES`和“`LONDON_VERTICES`中，`LONDON_EDGES`代表实际的150万条街道路段，`LONDON_VERTICES`描述80万个路口。 最后，有两个包含伦敦地铁系统数据的表-地铁站和连接。
 
 这些数据是使用 [osmnx](https://github.com/gboeing/osmnx) python包下载的并且利用这个工具库 [Python Machine Learning Client for SAP HANA](https://pypi.org/project/hana-ml/) 导入到SAP HANA Cloud.
 

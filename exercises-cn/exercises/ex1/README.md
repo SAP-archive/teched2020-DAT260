@@ -13,20 +13,20 @@ FROM LONDON_VERTICES;
 
 几何实体可以用不同的空间参考系[Spatial Reference Systems (SRS)](https://en.wikipedia.org/wiki/Spatial_reference_system)表示。 给定的纬度和经度值基于圆形地球模型，并且相应的空间参考系统为[WGS84 (id 4326)](https://de.wikipedia.org/wiki/World_Geodetic_System_1984)。
 
-出于性能原因，建议使用投影空间参考系统而不是圆形地球模型。 这样，欧氏几何可以被用于空间计算，这比在球体上的计算简单。 处理空间数据时的第二个建议是保留基本几何形状。 这样，可以利用数据库内优化（例如空间索引）。
+出于性能原因，建议使用投影空间参考系统而不是圆形地球模型。 这样，欧几空间可以被用于空间计算，这比在球体上的计算简单。 处理空间数据时的第二个建议是保留基本几何形状。 这样，可以利用数据库内优化（例如空间索引）。
 
 观看这段简短的[YouTube视频](https://www.youtube.com/watch?v=s48iAbBrYBI&list=PL6RpkC85SLQA8za7iX9FRzewU7Vs022dl&index=2)，以了解空间参考系统的概念。
 
 ## 练习1.1-创建平面空间参考系统
 
 ---
-**创建具有ID 32630的空间参考系。**
+**创建具有ID 32630的空间参考系统。**
 
 ---
 
 SAP HANA已经内置了9000多个空间参考系统-包括通过[EPSG](https://epsg.org/)定义的空间参考系统。 适用于英国的投影空间参考系统是[SRS with id 32630](http://epsg.io/32630)。
 
-之前，我们可以使用此SRS创建第一列，我们需要将其安装在SAP HANA上。 仅在我们第一次使用此SRS时安装必须完成。 由于32630是EPSG的一部分，并且已经由HANA知道，因此我们可以发布仅引用SRS ID的[creation statement](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/9ebcad604e8d4c43a802d08cfdbe8ab2.html)。
+在我们可以使用此SRS创建我们的第一个空间几何列之前，我们需要将其安装在SAP HANA上。 安装仅需要在我们第一次使用此SRS时完成。 由于32630是EPSG的一部分，并且已知存在于HANA中，因此我们可以发布仅参考SRS ID的创建语句[creation statement](https://help.sap.com/viewer/bc9e455fe75541b8a248b4c09b086cf5/2020_03_QRC/en-US/9ebcad604e8d4c43a802d08cfdbe8ab2.html)。
 
 ```sql
 CREATE PREDEFINED SPATIAL REFERENCE SYSTEM IDENTIFIED BY 32630;
