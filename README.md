@@ -1,5 +1,7 @@
 # DAT260 - Multimodel Data Processing with SAP HANA Cloud
 
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/teched2020-DAT260)](https://api.reuse.software/info/github.com/SAP-samples/teched2020-DAT260)
+
 ## Description
 
 This repository contains the material for the SAP TechEd 2020 session called DAT260 - Multimodel Data Processing with SAP HANA Cloud.
