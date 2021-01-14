@@ -29,7 +29,7 @@ where `g` is our graph, `v_start` and `v_end` are the start/end vertices of the 
 CREATE OR REPLACE PROCEDURE "GS_SPOO"(
 	IN i_startVertex BIGINT,       -- INPUT: the ID of the start vertex
 	IN i_endVertex BIGINT,         -- INPUT: the ID of the end vertex
-	IN i_direction NVARCHAR(10),   -- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
+	IN i_direction VARCHAR(10),   -- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
 	OUT o_path_length BIGINT,      -- OUTPUT: the hop distance between start and end
 	OUT o_edges "TT_SPOO_EDGES" -- OUTPUT: a table containing the edges that make up a shortest path between start and end
 	)

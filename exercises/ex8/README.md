@@ -40,7 +40,7 @@ CREATE TYPE "TT_SPOO_WEIGHTED_EDGES" AS TABLE (
 CREATE OR REPLACE PROCEDURE "GS_SPOO_WEIGHTED"(
 	IN i_startVertex BIGINT, 		-- INPUT: the ID of the start vertex
 	IN i_endVertex BIGINT, 			-- INPUT: the ID of the end vertex
-	IN i_direction NVARCHAR(10), 	-- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
+	IN i_direction VARCHAR(10), 	-- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
 	OUT o_path_length BIGINT,		-- OUTPUT: the hop distance between start and end
 	OUT o_path_weight DOUBLE,		-- OUTPUT: the path weight/cost
 	OUT o_edges "TT_SPOO_WEIGHTED_EDGES"  -- OUTPUT: the edges that make up the path
@@ -127,8 +127,8 @@ Then the procedure.
 CREATE OR REPLACE PROCEDURE "GS_SPOO_MULTI_MODE"(
 	IN i_startVertex BIGINT, 		-- the ID of the start vertex
 	IN i_endVertex BIGINT, 			-- the ID of the end vertex
-	IN i_direction NVARCHAR(10), 	-- the the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
-	IN i_mode NVARCHAR(10), 		-- hop, time, bike
+	IN i_direction VARCHAR(10), 	-- the the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
+	IN i_mode VARCHAR(10), 		-- hop, time, bike
 	OUT o_path_length BIGINT,		-- the hop distance between start and end
 	OUT o_path_weight DOUBLE,		-- the path weight/cost based on the WEIGHT attribute
 	OUT o_edges "TT_SPOO_MULTI_MODE"
@@ -176,8 +176,8 @@ CREATE TYPE "TT_EDGES_SPOO_F" AS TABLE (
 CREATE OR REPLACE FUNCTION "F_SPOO_EDGES"(
 	IN i_startVertex BIGINT,
 	IN i_endVertex BIGINT,
-	IN i_direction NVARCHAR(10),
-	IN i_mode NVARCHAR(10)
+	IN i_direction VARCHAR(10),
+	IN i_mode VARCHAR(10)
 	)
   RETURNS "LONDON_EDGES"
 LANGUAGE SQLSCRIPT READS SQL DATA AS

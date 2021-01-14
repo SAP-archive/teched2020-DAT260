@@ -206,7 +206,7 @@ CREATE TYPE "DAT260"."TT_SPOO_EDGES" AS TABLE (
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO"(
     IN i_startVertex BIGINT,       -- INPUT: the ID of the start vertex
     IN i_endVertex BIGINT,         -- INPUT: the ID of the end vertex
-    IN i_direction NVARCHAR(10),   -- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
+    IN i_direction VARCHAR(10),   -- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
     OUT o_path_length BIGINT,      -- OUTPUT: the hop distance between start and end
     OUT o_edges "DAT260"."TT_SPOO_EDGES" -- OUTPUT: a table containing the edges that make up a shortest path between start and end
     )
@@ -255,7 +255,7 @@ CREATE TYPE "DAT260"."TT_SPOO_WEIGHTED_EDGES" AS TABLE (
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_WEIGHTED"(
     IN i_startVertex BIGINT,         -- INPUT: the ID of the start vertex
     IN i_endVertex BIGINT,             -- INPUT: the ID of the end vertex
-    IN i_direction NVARCHAR(10),     -- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
+    IN i_direction VARCHAR(10),     -- INPUT: the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
     OUT o_path_length BIGINT,        -- OUTPUT: the hop distance between start and end
     OUT o_path_weight DOUBLE,        -- OUTPUT: the path weight/cost
     OUT o_edges "DAT260"."TT_SPOO_WEIGHTED_EDGES"  -- OUTPUT: the edges that make up the path
@@ -300,8 +300,8 @@ CREATE TYPE "DAT260"."TT_SPOO_MULTI_MODE" AS TABLE (
 CREATE OR REPLACE PROCEDURE "DAT260"."GS_SPOO_MULTI_MODE"(
     IN i_startVertex BIGINT,         -- the ID of the start vertex
     IN i_endVertex BIGINT,             -- the ID of the end vertex
-    IN i_direction NVARCHAR(10),     -- the the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
-    IN i_mode NVARCHAR(10),         -- hop, time, bike
+    IN i_direction VARCHAR(10),     -- the the direction of the edge traversal: OUTGOING (default), INCOMING, ANY
+    IN i_mode VARCHAR(10),         -- hop, time, bike
     OUT o_path_length BIGINT,        -- the hop distance between start and end
     OUT o_path_weight DOUBLE,        -- the path weight/cost based on the WEIGHT attribute
     OUT o_edges "DAT260"."TT_SPOO_MULTI_MODE"
@@ -342,8 +342,8 @@ CREATE TYPE "DAT260"."TT_EDGES_SPOO_F" AS TABLE (
 CREATE OR REPLACE FUNCTION "DAT260"."F_SPOO_EDGES"(
     IN i_startVertex BIGINT,
     IN i_endVertex BIGINT,
-    IN i_direction NVARCHAR(10),
-    IN i_mode NVARCHAR(10)
+    IN i_direction VARCHAR(10),
+    IN i_mode VARCHAR(10)
     )
   RETURNS "DAT260"."LONDON_EDGES"
 LANGUAGE SQLSCRIPT READS SQL DATA AS
@@ -389,7 +389,7 @@ CALL "DAT260"."GS_SPOA" (1433737988, 300, ?);
 CREATE OR REPLACE FUNCTION "DAT260"."F_SPOA_VERTICES"(
     IN i_startVertex BIGINT,         -- the key of the start vertex
     IN i_max DOUBLE,                -- the maximum distance/cost
-    IN i_resultType NVARCHAR(20)    -- indicates if the result should be POINTS, CONVEXHULL, or HEXAGON
+    IN i_resultType VARCHAR(20)    -- indicates if the result should be POINTS, CONVEXHULL, or HEXAGON
     )
     RETURNS TABLE("ID" BIGINT, "SHAPE" ST_GEOMETRY(32630), "CALCULATED_COST" DOUBLE)
 LANGUAGE SQLSCRIPT READS SQL DATA AS
@@ -417,7 +417,7 @@ SELECT * FROM "DAT260"."F_SPOA_VERTICES"(1433737988, 60, 'POINTS') ORDER BY "CAL
 SELECT * FROM "DAT260"."F_SPOA_VERTICES"(1433737988, 60, 'CONVEXHULL') ORDER BY "CALCULATED_COST" DESC;
 SELECT * FROM "DAT260"."F_SPOA_VERTICES"(1433737988, 240, 'HEXAGON') ORDER BY "CALCULATED_COST" DESC;
 
-CREATE OR REPLACE FUNCTION "DAT260"."F_SPOA_VERTICES_MULTI" (IN i_filter NVARCHAR(5000), IN i_max DOUBLE, IN i_resultType NVARCHAR(20))
+CREATE OR REPLACE FUNCTION "DAT260"."F_SPOA_VERTICES_MULTI" (IN i_filter VARCHAR(5000), IN i_max DOUBLE, IN i_resultType VARCHAR(20))
     RETURNS TABLE("ID" BIGINT, "SHAPE" ST_GEOMETRY(32630), "CALCULATED_COST" DOUBLE)
 LANGUAGE SQLSCRIPT READS SQL DATA AS
 BEGIN

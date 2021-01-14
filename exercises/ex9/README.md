@@ -43,7 +43,7 @@ In order to visualize the data, let's wrap it in a function and do some post-pro
 CREATE OR REPLACE FUNCTION "F_SPOA_VERTICES"(
 	IN i_startVertex BIGINT, 		-- the key of the start vertex
 	IN i_max DOUBLE,				-- the maximum distance/cost
-	IN i_resultType NVARCHAR(20)	-- indicates if the result should be POINTS, CONVEXHULL, or HEXAGON
+	IN i_resultType VARCHAR(20)	-- indicates if the result should be POINTS, CONVEXHULL, or HEXAGON
 	)
     RETURNS TABLE("ID" BIGINT, "SHAPE" ST_GEOMETRY(32630), "CALCULATED_COST" DOUBLE)
 LANGUAGE SQLSCRIPT READS SQL DATA AS
@@ -79,7 +79,7 @@ Let's say we want to do business with cyclists in London. Our goal is to open a 
 So let's calculate 3 min drive time areas around all the bike repair shops in London. We'll use the MAP_MERGE operation to digest multiple POIs.
 
 ```sql
-CREATE OR REPLACE FUNCTION "F_SPOA_VERTICES_MULTI" (IN i_filter NVARCHAR(5000), IN i_max DOUBLE, IN i_resultType NVARCHAR(20))
+CREATE OR REPLACE FUNCTION "F_SPOA_VERTICES_MULTI" (IN i_filter VARCHAR(5000), IN i_max DOUBLE, IN i_resultType VARCHAR(20))
 	RETURNS TABLE("ID" BIGINT, "SHAPE" ST_GEOMETRY(32630), "CALCULATED_COST" DOUBLE)
 LANGUAGE SQLSCRIPT READS SQL DATA AS
 BEGIN
