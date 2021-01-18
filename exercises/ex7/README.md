@@ -10,7 +10,7 @@ If you are familiar with SAP HANA database procedures using SQLScript, you alrea
 
 ```sql
 CREATE TYPE "TT_SPOO_EDGES" AS TABLE (
-    "ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE)
+    "ID" NVARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE)
 ;
 ```
 

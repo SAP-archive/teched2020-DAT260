@@ -33,7 +33,7 @@ Just like in the previous example, we define a table type and a procedure. This 
 
 ```sql
 CREATE TYPE "TT_SPOO_WEIGHTED_EDGES" AS TABLE (
-    "ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SPEED_MPH" INT
+    "ID" NVARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SPEED_MPH" INT
 );
 ```
 ```sql
@@ -119,7 +119,7 @@ ELSE { RETURN :e."length"; } `<br>`
 Create a `TABLE TYPE` first.
 ```SQL
 CREATE TYPE "TT_SPOO_MULTI_MODE" AS TABLE (
-		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SPEED_MPH" INT, "highway" NVARCHAR(5000)
+		"ID" NVARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SPEED_MPH" INT, "highway" NVARCHAR(5000)
 );
 ```
 Then the procedure.
@@ -169,7 +169,7 @@ The procedure above returns more than one output - the path's length, weight, an
 
 ```SQL
 CREATE TYPE "TT_EDGES_SPOO_F" AS TABLE (
-		"ID" VARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SHAPE" ST_GEOMETRY(32630)
+		"ID" NVARCHAR(5000), "SOURCE" BIGINT, "TARGET" BIGINT, "EDGE_ORDER" BIGINT, "length" DOUBLE, "SHAPE" ST_GEOMETRY(32630)
 );
 ```
 ```SQL
