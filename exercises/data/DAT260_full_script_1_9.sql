@@ -130,6 +130,32 @@ USING
 ) circle ON 1=1
 WHEN MATCHED THEN UPDATE SET lv.IN_SCOPE = CIRCLE.AREA.ST_Intersects(SHAPE);
 
+-- As an alternative to the MERGE statement above to create the IN_SCOPE values, you can run an "anonymous block" to handle the update
+-- First, ensure that all data resides in the main column fragments, which have an efficient spatial index
+MERGE DELTA OF LONDON_VERTICES;
+
+-- Use a spatial filter to find the relevant vertices. The filter will use the
+-- spatial index of the column.
+DO BEGIN
+    DECLARE circle ST_Geometry;
+
+    SELECT
+        ST_MakeLine(
+            ST_GeomFromText('POINT (706327.107445 5710259.94449)', 32630),
+            SHAPE
+        )
+        .ST_LineInterpolatePoint(0.5)
+        .ST_Buffer(5, 'kilometer')
+    INTO circle
+    FROM LONDON_POI
+    WHERE "osmid" = 6274057185;
+
+    UPDATE LONDON_VERTICES
+    SET IN_SCOPE = 1
+    WHERE SHAPE.ST_Intersects(circle) = 1;
+END;
+
+-- Inspect the result
 SELECT SHAPE FROM LONDON_VERTICES WHERE IN_SCOPE = 1;
 
 SELECT le.*
